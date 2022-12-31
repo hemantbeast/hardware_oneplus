@@ -16,9 +16,13 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           android:sharedUserId="android.uid.system"
-          package="org.lineageos.settings.device">
+          package="com.aicp.oneplus">
+
+    <uses-permission android:name="android.permission.INJECT_EVENTS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -28,7 +32,7 @@
         android:directBootAware="true">
 
         <receiver
-            android:name="org.lineageos.settings.device.BootCompletedReceiver"
+            android:name=".BootCompletedReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
@@ -50,11 +54,11 @@
 
         <!-- Additional button settings (Button settings) -->
         <activity
-            android:name=".ButtonSettingsActivity"
+            android:name=".OneplusPartsActivity"
             android:label="@string/button_panel_title"
             android:exported="false">
             <intent-filter>
-                <action android:name="org.lineageos.settings.device.ADDITIONAL_BUTTONS_SETTINGS" />
+                <action android:name="com.aicp.oneplus.ONEPLUS_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

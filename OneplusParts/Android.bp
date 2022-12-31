@@ -1,15 +1,29 @@
 android_app {
-    name: "KeyHandler",
+    name: "OneplusParts",
 
-    srcs: ["src/**/*.kt"],
+    defaults: [
+        "SettingsLibDefaults",
+    ],
+
+    srcs: [
+        "src/**/*.java",
+        "src/**/*.kt",
+    ],
+
     resource_dirs: ["res"],
 
     certificate: "platform",
     platform_apis: true,
     system_ext_specific: true,
+    privileged: true,
 
     static_libs: [
-        "org.lineageos.settings.resources",
+        "com.aicp.settings.resources",
+        "com.aicp.deviceparts",
+        "androidx.core_core",
+        "androidx.preference_preference",
+        "AicpGear-preference",
+        "AicpGear-util",
     ],
 
     optimize: {

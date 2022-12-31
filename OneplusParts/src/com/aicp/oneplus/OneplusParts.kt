@@ -3,16 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.lineageos.settings.device
+package com.aicp.oneplus
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.preference.PreferenceFragment
+import androidx.preference.PreferenceFragmentCompat
 
-class ButtonSettingsFragment : PreferenceFragment() {
+class OneplusParts : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.button_panel)
-        activity.actionBar!!.setDisplayHomeAsUpEnabled(true)
+        addPreferencesFromResource(R.xml.main)
+        requireActivity().actionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun addPreferencesFromResource(preferencesResId: Int) {
@@ -22,7 +22,7 @@ class ButtonSettingsFragment : PreferenceFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.home -> {
-                activity.finish()
+                requireActivity().finish()
                 return true
             }
         }

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.lineageos.settings.device
+package com.aicp.oneplus
 
 import android.os.Bundle
 
@@ -15,7 +15,7 @@ class ButtonSettingsActivity : CollapsingToolbarBaseActivity() {
         super.onCreate(savedInstanceState)
         fragmentManager.beginTransaction().replace(
             R.id.content_frame,
-            ButtonSettingsFragment()
+            OneplusParts()
         ).commit()
     }
 }

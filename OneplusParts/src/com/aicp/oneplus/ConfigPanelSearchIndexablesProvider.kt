@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.lineageos.settings.device
+package com.aicp.oneplus
 
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -46,7 +46,7 @@ class ConfigPanelSearchIndexablesProvider : SearchIndexablesProvider() {
         ref[COLUMN_INDEX_XML_RES_CLASS_NAME] = null
         ref[COLUMN_INDEX_XML_RES_ICON_RESID] = sir.iconResId
         ref[COLUMN_INDEX_XML_RES_INTENT_ACTION] = "com.android.settings.action.EXTRA_SETTINGS"
-        ref[COLUMN_INDEX_XML_RES_INTENT_TARGET_PACKAGE] = "org.lineageos.settings.device"
+        ref[COLUMN_INDEX_XML_RES_INTENT_TARGET_PACKAGE] = "com.aicp.oneplus"
         ref[COLUMN_INDEX_XML_RES_INTENT_TARGET_CLASS] = sir.className
         return ref
     }
@@ -56,7 +56,7 @@ class ConfigPanelSearchIndexablesProvider : SearchIndexablesProvider() {
 
         private val INDEXABLE_RES = arrayOf<SearchIndexableResource>(
             SearchIndexableResource(
-                1, R.xml.button_panel, ButtonSettingsActivity::class.java.name, 0
+                1, R.xml.main, OneplusPartsActivity::class.java.name, 0
             )
         )
     }

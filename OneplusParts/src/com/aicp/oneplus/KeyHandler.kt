@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.lineageos.settings.device
+package com.aicp.oneplus
 
 import android.app.NotificationManager
 import android.app.Service
