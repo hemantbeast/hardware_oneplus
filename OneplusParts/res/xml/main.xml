@@ -41,4 +41,33 @@
             android:defaultValue="2" />
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_audiogains"
+        android:title="@string/category_audiogains">
+        <com.aicp.oneplus.audio.EarpieceGainPreference
+            android:key="earpiece_gain"
+            android:title="@string/earpiece_gain_title"
+            android:icon="@drawable/ic_earpiece_gain"
+            android:summary="@string/earpiece_gain_summary"
+            android:persistent="false" />
+        <com.aicp.oneplus.audio.HeadphoneGainPreference
+            android:key="headphone_gain"
+            android:title="@string/headphone_gain_title"
+            android:icon="@drawable/ic_hp_gain"
+            android:summary="@string/headphone_gain_summary"
+            android:persistent="false" />
+        <com.aicp.oneplus.audio.MicGainPreference
+            android:key="mic_gain"
+            android:title="@string/mic_gain_title"
+            android:icon="@drawable/ic_mic_gain"
+            android:summary="@string/mic_gain_summary"
+            android:persistent="false" />
+        <com.aicp.oneplus.audio.SpeakerGainPreference
+            android:key="speaker_gain"
+            android:title="@string/speaker_gain_title"
+            android:icon="@drawable/ic_speaker_gain"
+            android:summary="@string/speaker_gain_summary"
+            android:persistent="false" />
+    </PreferenceCategory>
 </PreferenceScreen>
