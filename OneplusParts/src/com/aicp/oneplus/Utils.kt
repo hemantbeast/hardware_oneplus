@@ -16,7 +16,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 */
-package com.aicp.device;
+package com.aicp.oneplus;
 
 import android.util.Log
 import java.io.*

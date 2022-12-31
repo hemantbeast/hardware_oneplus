@@ -10,10 +10,10 @@ import android.os.Bundle
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity
 import com.android.settingslib.widget.R
 
-class ButtonSettingsActivity : CollapsingToolbarBaseActivity() {
+class OneplusPartsActivity : CollapsingToolbarBaseActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentManager.beginTransaction().replace(
+        supportFragmentManager.beginTransaction().replace(
             R.id.content_frame,
             OneplusParts()
         ).commit()

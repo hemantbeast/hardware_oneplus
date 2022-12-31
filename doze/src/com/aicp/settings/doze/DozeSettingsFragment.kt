@@ -16,7 +16,7 @@ import androidx.preference.*
 import com.android.settingslib.widget.MainSwitchPreference
 import com.android.settingslib.widget.OnMainSwitchChangeListener
 
-class DozeSettingsFragment : PreferenceFragment(), Preference.OnPreferenceChangeListener,
+class DozeSettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener,
     OnMainSwitchChangeListener {
     private lateinit var alwaysOnDisplayPreference: SwitchPreference
     private lateinit var switchBar: MainSwitchPreference
@@ -29,9 +29,9 @@ class DozeSettingsFragment : PreferenceFragment(), Preference.OnPreferenceChange
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.doze_settings)
 
-        val prefs = activity.getSharedPreferences("doze_settings", Activity.MODE_PRIVATE)!!
+        val prefs = requireActivity().getSharedPreferences("doze_settings", Activity.MODE_PRIVATE)!!
         if (savedInstanceState == null && !prefs.getBoolean("first_help_shown", false)) {
-            AlertDialog.Builder(context)
+            AlertDialog.Builder(requireContext())
                 .setTitle(R.string.doze_settings_help_title)
                 .setMessage(R.string.doze_settings_help_text)
                 .setNegativeButton(R.string.dialog_ok) { _, _ ->
@@ -40,14 +40,14 @@ class DozeSettingsFragment : PreferenceFragment(), Preference.OnPreferenceChange
                 .show()
         }
 
-        val dozeEnabled = Utils.isDozeEnabled(context)
+        val dozeEnabled = Utils.isDozeEnabled(requireContext())
         switchBar = findPreference(Utils.DOZE_ENABLE)!!
         switchBar.addOnSwitchChangeListener(this)
         switchBar.isChecked = dozeEnabled
 
         alwaysOnDisplayPreference = findPreference(Utils.ALWAYS_ON_DISPLAY)!!
         alwaysOnDisplayPreference.isEnabled = dozeEnabled
-        alwaysOnDisplayPreference.isChecked = Utils.isAlwaysOnEnabled(context)
+        alwaysOnDisplayPreference.isChecked = Utils.isAlwaysOnEnabled(requireContext())
         alwaysOnDisplayPreference.onPreferenceChangeListener = this
 
         val pickupSensorCategory =
@@ -71,7 +71,7 @@ class DozeSettingsFragment : PreferenceFragment(), Preference.OnPreferenceChange
         pocketPreference?.onPreferenceChangeListener = this
 
         // Hide AOD if not supported and set all its dependents otherwise
-        if (!Utils.alwaysOnDisplayAvailable(context)) {
+        if (!Utils.alwaysOnDisplayAvailable(requireContext())) {
             preferenceScreen.removePreference(alwaysOnDisplayPreference)
         } else {
             pickupSensorCategory?.dependency = Utils.ALWAYS_ON_DISPLAY
@@ -81,20 +81,20 @@ class DozeSettingsFragment : PreferenceFragment(), Preference.OnPreferenceChange
 
     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
         if (preference.key == Utils.ALWAYS_ON_DISPLAY) {
-            Utils.enableAlwaysOn(context, newValue as Boolean)
+            Utils.enableAlwaysOn(requireContext(), newValue as Boolean)
         }
-        handler.post { Utils.checkDozeService(context) }
+        handler.post { Utils.checkDozeService(requireContext()) }
         return true
     }
 
     override fun onSwitchChanged(switchView: Switch, isChecked: Boolean) {
-        Utils.enableDoze(context, isChecked)
-        Utils.checkDozeService(context)
+        Utils.enableDoze(requireContext(), isChecked)
+        Utils.checkDozeService(requireContext())
 
         switchBar.isChecked = isChecked
 
         if (!isChecked) {
-            Utils.enableAlwaysOn(context, false)
+            Utils.enableAlwaysOn(requireContext(), false)
             alwaysOnDisplayPreference.isChecked = false
         }
 
