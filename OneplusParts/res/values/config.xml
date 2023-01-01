@@ -52,4 +52,7 @@
     <integer name="audioSpeakerGainMax"></integer>
     <integer name="audioSpeakerInterval">1</integer>
     <integer name="audioSpeakerGainDefault"></integer>
+
+    <!-- Device fps path -->
+    <string name="pathfpsInfo"></string>
 </resources>

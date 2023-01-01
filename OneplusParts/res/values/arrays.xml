@@ -23,4 +23,59 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+
+    <!-- FPS Info -->
+    <string-array name="fps_info_color_entries" translatable="false">
+        <item>@string/fps_info_color_green</item>
+        <item>@string/fps_info_color_red</item>
+        <item>@string/fps_info_color_magenta</item>
+        <item>@string/fps_info_color_blue</item>
+        <item>@string/fps_info_color_cyan</item>
+        <item>@string/fps_info_color_yellow</item>
+        <item>@string/fps_info_color_black</item>
+        <item>@string/fps_info_color_white</item>
+        <item>@string/fps_info_color_gray</item>
+        <item>@string/fps_info_color_ltgray</item>
+        <item>@string/fps_info_color_dkgray</item>
+        <item>@string/fps_info_color_accent</item>
+    </string-array>
+
+    <string-array name="fps_info_color_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+
+    <string-array name="fps_info_position_entries" translatable="false">
+        <item>@string/fps_info_position_top_left</item>
+        <item>@string/fps_info_position_top_center</item>
+        <item>@string/fps_info_position_top_right</item>
+        <item>@string/fps_info_position_bottom_left</item>
+        <item>@string/fps_info_position_bottom_center</item>
+        <item>@string/fps_info_position_bottom_right</item>
+        <item>@string/fps_info_position_center_left</item>
+        <item>@string/fps_info_position_center_center</item>
+        <item>@string/fps_info_position_center_right</item>
+    </string-array>
+
+    <string-array name="fps_info_position_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
 </resources>

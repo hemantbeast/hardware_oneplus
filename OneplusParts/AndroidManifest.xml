@@ -67,5 +67,10 @@
             android:name=".KeyHandler"
             android:permission="KeyHandlerService"
             android:exported="false" />
+
+        <!-- FPS info service -->
+        <service
+            android:name=".services.FPSInfoService"
+            android:exported="false" />
     </application>
 </manifest>

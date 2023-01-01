@@ -19,4 +19,33 @@
     <string name="alert_slider_mode_dnd_alarms_only">Alarms only</string>
     <string name="alert_slider_mute_media_title">Mute media</string>
     <string name="alert_slider_mute_media_summary">Mute media when switching to silent</string>
+
+     <!-- FPS Info -->
+    <string name="fps_title">Measured FPS</string>
+    <string name="fps_info_title">FPS overlay</string>
+    <string name="fps_info_summary">Show overlay with current frames per second</string>
+    <string name="fps_info_color_title">Text color</string>
+    <string name="fps_info_color_green">Green</string>
+    <string name="fps_info_color_red">Red</string>
+    <string name="fps_info_color_magenta">Magenta</string>
+    <string name="fps_info_color_blue">Blue</string>
+    <string name="fps_info_color_cyan">Cyan</string>
+    <string name="fps_info_color_yellow">Yellow</string>
+    <string name="fps_info_color_black">Black</string>
+    <string name="fps_info_color_white">White</string>
+    <string name="fps_info_color_gray">Gray</string>
+    <string name="fps_info_color_ltgray">Light Gray</string>
+    <string name="fps_info_color_dkgray">Dark Gray</string>
+    <string name="fps_info_color_accent">Follow System</string>
+    <string name="fps_info_position_title">Overlay position</string>
+    <string name="fps_info_position_top_left">Top left</string>
+    <string name="fps_info_position_top_center">Top center</string>
+    <string name="fps_info_position_top_right">Top right</string>
+    <string name="fps_info_position_bottom_left">Bottom left</string>
+    <string name="fps_info_position_bottom_center">Bottom center</string>
+    <string name="fps_info_position_bottom_right">Bottom right</string>
+    <string name="fps_info_position_center_left">Center left</string>
+    <string name="fps_info_position_center_center">Center</string>
+    <string name="fps_info_position_center_right">Center right</string>
+    <string name="fps_info_text_size_title">Text size</string>
 </resources>

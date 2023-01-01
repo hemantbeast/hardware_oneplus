@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import android.util.Log
 
 import com.aicp.oneplus.audio.*
+import com.aicp.oneplus.services.FPSInfoService
 
 class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -83,6 +84,13 @@ class BootCompletedReceiver : BroadcastReceiver() {
         HeadphoneGainPreference.restore(context)
         MicGainPreference.restore(context)
         SpeakerGainPreference.restore(context)
+
+        val sharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val fpsEnabled = sharedPrefs.getBoolean(OneplusParts.KEY_FPS_INFO, false)
+
+        if (fpsEnabled) {
+            context.startService(Intent(context, FPSInfoService::class.java))
+        }
     }
 
     private fun restore(file: String?, enabled: Boolean) {
