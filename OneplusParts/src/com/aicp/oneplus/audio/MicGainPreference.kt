@@ -22,32 +22,30 @@ import android.content.Context
 import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
-import android.widget.SeekBar.OnSeekBarChangeListener
-import android.widget.SeekBar
-import androidx.preference.Preference
-import androidx.preference.PreferenceViewHolder
 
 import com.aicp.oneplus.OneplusParts
 import com.aicp.oneplus.Utils
 import com.aicp.oneplus.R
+import com.aicp.oneplus.preferences.CustomSeekBarPreference
 
-class MicGainPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs),
-    OnSeekBarChangeListener {
-    private var mMinValue = 0
-    private var mMaxValue = 1
-    private var mSeekBar: SeekBar? = null
-    private var mOldStrength = 0
+class MicGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
 
     init {
         // from sound/soc/codecs/wcd9335.c
         mFileName = context.resources.getString(R.string.pathAudioMicGain)
         if (isSupported) {
+            mInterval = context.resources.getInteger(R.integer.audioMicGainInterval)
             mMinValue = context.resources.getInteger(R.integer.audioMicGainMin)
             mMaxValue = context.resources.getInteger(R.integer.audioMicGainMax)
+            mShowSign = false
+            mUnits = ""
+            mContinuousUpdates = false
         }
+        mDefaultValueExists = true
         DEFAULT_VALUE = getDefaultValue(context)
-        layoutResource = R.layout.preference_seek_bar
-        restore(context)
+        mDefaultValue = DEFAULT_VALUE.toInt()
+        mValue = getValue(context).toInt()
+        isPersistent = false
     }
 
     fun supported(): Boolean {
@@ -58,46 +56,14 @@ class MicGainPreference(context: Context, attrs: AttributeSet?) : Preference(con
         return Utils.getFileValue(mFileName, DEFAULT_VALUE)
     }
 
+    override fun changeValue(newValue: Int) {
+        setValue(newValue.toString())
+    }
+
     private fun setValue(newValue: String) {
         Log.d(TAG, "setValue - mFileName $mFileName - newValue $newValue")
         Utils.writeValue(mFileName, newValue)
         Settings.System.putString(context.contentResolver, SETTINGS_KEY, newValue)
-    }
-
-    private fun restore(context: Context) {
-        if (!isSupported) {
-            return
-        }
-        var storedValue = Settings.System.getString(context.contentResolver, SETTINGS_KEY)
-        if (storedValue == null) {
-            storedValue = DEFAULT_VALUE
-        }
-        Utils.writeValue(mFileName, storedValue)
-    }
-
-    override fun onProgressChanged(
-        seekBar: SeekBar, progress: Int,
-        fromTouch: Boolean
-    ) {
-        setValue((progress + mMinValue).toString())
-        Log.d(TAG, "onProgressChanged - progress $progress - mMinValue $mMinValue")
-    }
-
-    override fun onBindViewHolder(holder: PreferenceViewHolder) {
-        super.onBindViewHolder(holder)
-        mOldStrength = getValue(context).toInt()
-        mSeekBar = holder.findViewById(R.id.seekbar) as SeekBar
-        mSeekBar!!.max = mMaxValue - mMinValue
-        mSeekBar!!.progress = mOldStrength - mMinValue
-        mSeekBar!!.setOnSeekBarChangeListener(this)
-    }
-
-    override fun onStartTrackingTouch(seekBar: SeekBar) {
-        // NA
-    }
-
-    override fun onStopTrackingTouch(seekBar: SeekBar) {
-        // NA
     }
 
     companion object {
@@ -125,6 +91,17 @@ class MicGainPreference(context: Context, attrs: AttributeSet?) : Preference(con
             } else {
                 "0"
             }
+        }
+
+        fun restore(context: Context) {
+            if (!isSupported) {
+                return
+            }
+            var storedValue = Settings.System.getString(context.contentResolver, SETTINGS_KEY)
+            if (storedValue == null) {
+                storedValue = DEFAULT_VALUE
+            }
+            Utils.writeValue(mFileName, storedValue)
         }
     }
 }

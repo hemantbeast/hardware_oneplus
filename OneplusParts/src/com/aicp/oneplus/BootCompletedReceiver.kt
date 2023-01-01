@@ -79,32 +79,10 @@ class BootCompletedReceiver : BroadcastReceiver() {
     }
 
     private fun restoreAfterUserSwitch(context: Context) {
-        val resolver = context.contentResolver
-
-        restore(
-            EarpieceGainPreference.getFile(context), Settings.System.getString(
-                resolver,
-                EarpieceGainPreference.SETTINGS_KEY
-            )
-        )
-        restore(
-            MicGainPreference.getFile(context), Settings.System.getString(
-                resolver,
-                MicGainPreference.SETTINGS_KEY
-            )
-        )
-        restoreDual(
-            HeadphoneGainPreference.getFile(context), Settings.System.getString(
-                resolver,
-                HeadphoneGainPreference.SETTINGS_KEY
-            )
-        )
-        restore(
-            SpeakerGainPreference.getFile(context), Settings.System.getString(
-                resolver,
-                SpeakerGainPreference.SETTINGS_KEY
-            )
-        )
+        EarpieceGainPreference.restore(context)
+        HeadphoneGainPreference.restore(context)
+        MicGainPreference.restore(context)
+        SpeakerGainPreference.restore(context)
     }
 
     private fun restore(file: String?, enabled: Boolean) {
