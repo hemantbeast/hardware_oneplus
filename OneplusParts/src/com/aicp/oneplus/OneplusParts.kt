@@ -39,6 +39,14 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         setFPSInfoPreference(requireContext())
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (isFeatureSupported(requireContext(), R.string.pathfpsInfo)) {
+            mFpsInfo?.isChecked = isFPSOverlayRunning()
+        }
+    }
+
     private fun setAudioGainPreference() {
         val audioGainsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_AUDIO)
         var audioGainsRemoved = 0
