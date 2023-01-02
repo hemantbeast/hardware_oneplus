@@ -61,7 +61,6 @@ class MicGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarP
     }
 
     private fun setValue(newValue: String) {
-        Log.d(TAG, "setValue - mFileName $mFileName - newValue $newValue")
         Utils.writeValue(mFileName, newValue)
         Settings.System.putString(context.contentResolver, SETTINGS_KEY, newValue)
     }
