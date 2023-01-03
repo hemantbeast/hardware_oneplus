@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import android.util.Log
 
 import com.aicp.oneplus.audio.*
+import com.aicp.oneplus.gesture.MainSettingsFragment
 import com.aicp.oneplus.services.FPSInfoService
 
 class BootCompletedReceiver : BroadcastReceiver() {
@@ -80,11 +81,16 @@ class BootCompletedReceiver : BroadcastReceiver() {
     }
 
     private fun restoreAfterUserSwitch(context: Context) {
+        // Audio gains
         EarpieceGainPreference.restore(context)
         HeadphoneGainPreference.restore(context)
         MicGainPreference.restore(context)
         SpeakerGainPreference.restore(context)
 
+        // Touch gestures
+        MainSettingsFragment.restoreTouchscreenGestureStates(context)
+
+        // FPS
         val sharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val fpsEnabled = sharedPrefs.getBoolean(OneplusParts.KEY_FPS_INFO, false)
 

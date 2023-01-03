@@ -109,4 +109,20 @@
             settings:units=""
             android:defaultValue="3" />
     </PreferenceCategory>
+
+    <!-- Start of touchscreen Category -->
+    <PreferenceCategory
+        android:key="touchscreen"
+        android:title="@string/touchscreen_title">
+
+        <Preference
+            android:key="touchscreen_gestures"
+            android:title="@string/touchscreen_gesture_settings_title"
+            android:summary="@string/touchscreen_gesture_settings_summary"
+            android:persistent="false" >
+            <intent android:action="android.intent.action.MAIN"
+                android:targetPackage="com.aicp.oneplus"
+                android:targetClass="com.aicp.oneplus.gesture.GestureSettingsActivity" />
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>
