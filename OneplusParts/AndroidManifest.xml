@@ -19,17 +19,10 @@
           package="com.aicp.oneplus">
 
     <uses-permission android:name="android.permission.INJECT_EVENTS"/>
-    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
-    <permission
-        android:name="com.aicp.oneplus.gesture.TRIGGER_SCREEN_OFF_GESTURE"
-        android:protectionLevel="signatureOrSystem" />
-
-    <protected-broadcast android:name="com.aicp.oneplus.gesture.UPDATE_SETTINGS" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -79,25 +72,5 @@
         <service
             android:name=".services.FPSInfoService"
             android:exported="false" />
-
-        <!-- Touch Gesture Settings Activity -->
-        <activity
-            android:name=".gesture.GestureSettingsActivity"
-            android:label="@string/touchscreen_gesture_settings_title"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".gesture.ScreenOffLaunchGestureActivity"
-            android:permission="com.aicp.oneplus.gesture.TRIGGER_SCREEN_OFF_GESTURE"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:label="@string/touchscreen_gesture_settings_title"
-            android:theme="@style/AppTheme.Transparent">
-        </activity>
     </application>
 </manifest>
