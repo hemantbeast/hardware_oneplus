@@ -1,0 +1,32 @@
+android_app {
+    name: "TouchGestures",
+
+    // Include SettingsLib and it's dependencies
+    defaults: ["SettingsLibDefaults"],
+
+    srcs: [
+        "src/**/*.java",
+        "src/**/*.kt",
+    ],
+    resource_dirs: ["res"],
+
+    static_libs: [
+        "AicpGear-preference",
+        "AicpGear-util",
+        "com.aicp.deviceparts",
+    ],
+
+    manifest: "AndroidManifest.xml",
+
+    system_ext_specific: true,
+
+    platform_apis: true,
+    certificate: "platform",
+    dex_preopt: {
+        enabled: false,
+    },
+    optimize: {
+        enabled: false,
+    },
+    privileged: true,
+}

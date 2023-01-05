@@ -109,4 +109,22 @@
             settings:units=""
             android:defaultValue="3" />
     </PreferenceCategory>
+
+    <!-- Touch gesture -->
+    <com.aicp.gear.preference.SelfRemovingPreferenceCategory
+        android:key="touchscreen_gestures"
+        android:title="@string/touchscreen_gestures_category_title"
+        aicpextras:requiresPackageInstalled="com.android.touch.gestures">
+
+        <Preference
+            android:key="screenoff_gestures"
+            android:icon="@drawable/ic_gesture"
+            android:title="@string/touchscreen_gestures_title"
+            android:summary="@string/touchscreen_gestures_summary">
+            <intent android:action="android.intent.action.MAIN"
+                android:targetPackage="com.android.touch.gestures"
+                android:targetClass="com.android.touch.gestures.TouchscreenGestureSettings" />
+        </Preference>
+
+    </com.aicp.gear.preference.SelfRemovingPreferenceCategory>
 </PreferenceScreen>
