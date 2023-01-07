@@ -18,41 +18,44 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Device earpiece gain sysfs -->
-    <string name="pathAudioEarpieceGain"></string>
+    <string name="pathAudioEarpieceGain" />
 
     <!-- Device earpiece gain min-max-default values -->
-    <integer name="audioEarpieceMin"></integer>
-    <integer name="audioEarpieceMax"></integer>
+    <integer name="audioEarpieceMin" />
+    <integer name="audioEarpieceMax" />
     <integer name="audioEarpieceInterval">1</integer>
-    <integer name="audioEarpieceDefault"></integer>
+    <integer name="audioEarpieceDefault" />
 
     <!-- Device audio mic gain sysfs -->
-    <string name="pathAudioMicGain"></string>
+    <string name="pathAudioMicGain" />
 
     <!-- Device audio mic min-max-default values -->
-    <integer name="audioMicGainMin"></integer>
-    <integer name="audioMicGainMax"></integer>
+    <integer name="audioMicGainMin" />
+    <integer name="audioMicGainMax" />
     <integer name="audioMicGainInterval">1</integer>
-    <integer name="audioMicGainDefault"></integer>
+    <integer name="audioMicGainDefault" />
 
     <!-- Device audio headphone gain sysfs -->
-    <string name="pathAudioHeadphoneGain"></string>
+    <string name="pathAudioHeadphoneGain" />
 
     <!-- Device audio headphone min-max-default values -->
-    <integer name="audioHeadphoneGainMin"></integer>
-    <integer name="audioHeadphoneGainMax"></integer>
+    <integer name="audioHeadphoneGainMin" />
+    <integer name="audioHeadphoneGainMax" />
     <integer name="audioHeadphoneInterval">1</integer>
-    <integer name="audioHeadphoneGainDefault"></integer>
+    <integer name="audioHeadphoneGainDefault" />
 
     <!-- Device audio speaker gain sysfs -->
-    <string name="pathAudioSpeakerGain"></string>
+    <string name="pathAudioSpeakerGain" />
 
     <!-- Device audio speaker min-max-default values -->
-    <integer name="audioSpeakerGainMin"></integer>
-    <integer name="audioSpeakerGainMax"></integer>
+    <integer name="audioSpeakerGainMin" />
+    <integer name="audioSpeakerGainMax" />
     <integer name="audioSpeakerInterval">1</integer>
-    <integer name="audioSpeakerGainDefault"></integer>
+    <integer name="audioSpeakerGainDefault" />
 
     <!-- Device fps path -->
-    <string name="pathfpsInfo"></string>
+    <string name="pathfpsInfo" />
+
+    <!-- Device usb fast charge path -->
+    <string name="pathUsbFastCharge" />
 </resources>

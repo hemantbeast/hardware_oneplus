@@ -31,12 +31,16 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     private var mFpsInfo: SwitchPreference? = null
     private var mFpsInfoTextSizePreference: CustomSeekBarPreference? = null
 
+    // USB fast charge
+    private var mUSB2FastChargeModeSwitch: SwitchPreference? = null
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.main)
         requireActivity().actionBar!!.setDisplayHomeAsUpEnabled(true)
 
         setAudioGainPreference()
         setFPSInfoPreference(requireContext())
+        setUsbFastCharge(requireContext())
     }
 
     override fun onResume() {
@@ -96,26 +100,52 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
     private fun setFPSInfoPreference(context: Context) {
         val prefs = requireActivity().getSharedPreferences(
-            "main",
+            KEY_SHARED_PREFERENCE,
             Activity.MODE_PRIVATE
         )
+
         val fpsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_FPS)
-
-        if (isFeatureSupported(context, R.string.pathfpsInfo)) {
-            mFpsInfo = findPreference(KEY_FPS_INFO)
-            mFpsInfo?.isChecked = prefs.getBoolean(KEY_FPS_INFO, false)
-            mFpsInfo?.setOnPreferenceChangeListener(this)
-
-            mFpsInfoPosition = findPreference(KEY_FPS_INFO_POSITION)
-            mFpsInfoPosition?.setOnPreferenceChangeListener(this)
-
-            mFpsInfoColor = findPreference(KEY_FPS_INFO_COLOR)
-            mFpsInfoColor?.setOnPreferenceChangeListener(this)
-
-            mFpsInfoTextSizePreference = findPreference(KEY_FPS_INFO_TEXT_SIZE);
-            mFpsInfoTextSizePreference?.setOnPreferenceChangeListener(this)
-        } else {
+        if (!isFeatureSupported(context, R.string.pathfpsInfo)) {
             fpsCategory?.parent?.removePreference(fpsCategory)
+            return
+        }
+
+        mFpsInfo = findPreference(KEY_FPS_INFO)
+        mFpsInfo?.isChecked = prefs.getBoolean(KEY_FPS_INFO, false)
+        mFpsInfo?.setOnPreferenceChangeListener(this)
+
+        mFpsInfoPosition = findPreference(KEY_FPS_INFO_POSITION)
+        mFpsInfoPosition?.setOnPreferenceChangeListener(this)
+
+        mFpsInfoColor = findPreference(KEY_FPS_INFO_COLOR)
+        mFpsInfoColor?.setOnPreferenceChangeListener(this)
+
+        mFpsInfoTextSizePreference = findPreference(KEY_FPS_INFO_TEXT_SIZE);
+        mFpsInfoTextSizePreference?.setOnPreferenceChangeListener(this)
+    }
+
+    private fun setUsbFastCharge(context: Context) {
+        val prefs = requireActivity().getSharedPreferences(
+            KEY_SHARED_PREFERENCE,
+            Activity.MODE_PRIVATE
+        )
+
+        val usbCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_USB)
+        if (!isFeatureSupported(context, R.string.pathUsbFastCharge)) {
+            usbCategory?.parent?.removePreference(usbCategory)
+            return
+        }
+
+        mUSB2FastChargeModeSwitch = findPreference(KEY_USB2_SWITCH)
+        val isFileWritable = Utils.fileWritable(getString(R.string.pathUsbFastCharge))
+
+        if (isFileWritable) {
+            mUSB2FastChargeModeSwitch?.isEnabled = true
+            mUSB2FastChargeModeSwitch?.isChecked = prefs.getBoolean(KEY_USB2_SWITCH,
+                Utils.getFileValueAsBoolean(getString(R.string.pathUsbFastCharge), false))
+            mUSB2FastChargeModeSwitch?.onPreferenceChangeListener = this
+        } else {
+            mUSB2FastChargeModeSwitch?.isEnabled = false
         }
     }
 
@@ -159,6 +189,12 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
                 }
             }
             return true
+        } else if (preference == mUSB2FastChargeModeSwitch) {
+            val enabled = newValue as Boolean
+            val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            sharedPrefs.edit().putBoolean(KEY_USB2_SWITCH, enabled).apply()
+            Utils.writeValue(getString(R.string.pathUsbFastCharge), if (enabled) "1" else "0")
+            return true
         }
         return false
     }
@@ -190,20 +226,24 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     companion object {
         private const val TAG = "OneplusParts"
 
-        public const val KEY_SETTINGS_PREFIX = "device_setting_";
+        public const val KEY_SETTINGS_PREFIX = "device_setting_"
+        private const val KEY_SHARED_PREFERENCE = "main"
 
-        private const val KEY_CATEGORY_AUDIO = "category_audiogains";
+        private const val KEY_CATEGORY_AUDIO = "category_audiogains"
         private const val KEY_CATEGORY_FPS = "category_fps"
+        private const val KEY_CATEGORY_USB = "category_usb"
 
-        public const val KEY_HEADPHONE_GAIN = "headphone_gain";
-        public const val KEY_EARPIECE_GAIN = "earpiece_gain";
-        public const val KEY_MIC_GAIN = "mic_gain";
-        public const val KEY_SPEAKER_GAIN = "speaker_gain";
+        public const val KEY_HEADPHONE_GAIN = "headphone_gain"
+        public const val KEY_EARPIECE_GAIN = "earpiece_gain"
+        public const val KEY_MIC_GAIN = "mic_gain"
+        public const val KEY_SPEAKER_GAIN = "speaker_gain"
 
         const val KEY_FPS_INFO = "fps_info"
         const val KEY_FPS_INFO_POSITION = "fps_info_position"
         const val KEY_FPS_INFO_COLOR = "fps_info_color"
         const val KEY_FPS_INFO_TEXT_SIZE = "fps_info_text_size"
+
+        const val KEY_USB2_SWITCH = "usb2_fast_charge"
 
         fun isFeatureSupported(ctx: Context, feature: Int): Boolean {
             return try {
@@ -211,6 +251,17 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
             }
             catch (e: Exception) {
                 false
+            }
+        }
+
+        fun restoreFastChargeSetting(context: Context) {
+            if (Utils.fileWritable(context.getString(R.string.pathUsbFastCharge))) {
+                val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+                val value = sharedPrefs.getBoolean(
+                    KEY_USB2_SWITCH,
+                    Utils.getFileValueAsBoolean(context.getString(R.string.pathUsbFastCharge), false)
+                )
+                Utils.writeValue(context.getString(R.string.pathUsbFastCharge), if (value) "1" else "0")
             }
         }
     }

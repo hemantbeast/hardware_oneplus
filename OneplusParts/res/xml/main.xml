@@ -4,10 +4,13 @@
     SPDX-License-Identifier: Apache-2.0
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:settings="http://schemas.android.com/apk/res/com.aicp.oneplus">
+    xmlns:settings="http://schemas.android.com/apk/res/com.aicp.oneplus"
+    xmlns:aicpextras="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <PreferenceCategory
         android:title="@string/alert_slider_category_title">
-
+        
         <SwitchPreference
             android:key="config_mute_media"
             android:title="@string/alert_slider_mute_media_title"
@@ -127,4 +130,16 @@
         </Preference>
 
     </com.aicp.gear.preference.SelfRemovingPreferenceCategory>
+
+    <!-- USB Fast charge -->
+    <PreferenceCategory
+        android:key="category_usb"
+        android:title="@string/usb_title">
+
+        <SwitchPreference
+            android:key="usb2_fast_charge"
+            android:icon="@drawable/ic_usb2_fc"
+            android:summary="@string/usb2_fc_summary"
+            android:title="@string/usb2_fc_title" />
+    </PreferenceCategory>
 </PreferenceScreen>

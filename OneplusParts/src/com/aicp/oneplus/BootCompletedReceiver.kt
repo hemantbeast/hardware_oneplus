@@ -21,97 +21,22 @@ class BootCompletedReceiver : BroadcastReceiver() {
         Log.d(TAG, "Starting")
         context.startService(Intent(context, KeyHandler::class.java))
 
-        maybeImportOldSettings(context)
-        restoreAfterUserSwitch(context)
-    }
-
-    private fun maybeImportOldSettings(context: Context) {
-        val resolver = context.contentResolver
-        val imported = Settings.System.getInt(resolver, "omni_device_setting_imported", 0) != 0
-
-        if (!imported) {
-            val sharedPrefs: SharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(context)
-
-            val audioEarpieceGain = sharedPrefs.getString(
-                OneplusParts.KEY_EARPIECE_GAIN,
-                EarpieceGainPreference.getDefaultValue(context)
-            )
-
-            Settings.System.putString(
-                resolver,
-                EarpieceGainPreference.SETTINGS_KEY,
-                audioEarpieceGain
-            )
-
-            restore(EarpieceGainPreference.getFile(context), audioEarpieceGain!!)
-            val audioMicGain = sharedPrefs.getString(
-                OneplusParts.KEY_MIC_GAIN,
-                MicGainPreference.getDefaultValue(context)
-            )
-
-            Settings.System.putString(resolver, MicGainPreference.SETTINGS_KEY, audioMicGain)
-            restore(MicGainPreference.getFile(context), audioMicGain!!)
-
-            val audioSpeakerGain = sharedPrefs.getString(
-                OneplusParts.KEY_SPEAKER_GAIN,
-                SpeakerGainPreference.getDefaultValue(context)
-            )
-
-            Settings.System.putString(
-                resolver,
-                SpeakerGainPreference.SETTINGS_KEY,
-                audioSpeakerGain
-            )
-            restore(SpeakerGainPreference.getFile(context), audioSpeakerGain!!)
-            val audioHeadphoneGain = sharedPrefs.getString(
-                OneplusParts.KEY_HEADPHONE_GAIN,
-                HeadphoneGainPreference.getDefaultValue(context)
-            )
-
-            Settings.System.putString(
-                resolver,
-                HeadphoneGainPreference.SETTINGS_KEY,
-                audioHeadphoneGain
-            )
-            restoreDual(HeadphoneGainPreference.getFile(context), audioHeadphoneGain!!)
-            Settings.System.putInt(resolver, "omni_device_setting_imported", 1)
-        }
-    }
-
-    private fun restoreAfterUserSwitch(context: Context) {
+        // Audio gains
         EarpieceGainPreference.restore(context)
         HeadphoneGainPreference.restore(context)
         MicGainPreference.restore(context)
         SpeakerGainPreference.restore(context)
 
+        // USB
+        OneplusParts.restoreFastChargeSetting(context)
+
+        // FPS
         val sharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val fpsEnabled = sharedPrefs.getBoolean(OneplusParts.KEY_FPS_INFO, false)
 
         if (fpsEnabled) {
             context.startService(Intent(context, FPSInfoService::class.java))
         }
-    }
-
-    private fun restore(file: String?, enabled: Boolean) {
-        if (file == null) {
-            return
-        }
-        Utils.writeValue(file, if (enabled) "1" else "0")
-    }
-
-    private fun restore(file: String?, value: String) {
-        if (file == null) {
-            return
-        }
-        Utils.writeValue(file, value)
-    }
-
-    private fun restoreDual(file: String?, value: String) {
-        if (file == null) {
-            return
-        }
-        Utils.writeValueDual(file, value)
     }
 
     companion object {
