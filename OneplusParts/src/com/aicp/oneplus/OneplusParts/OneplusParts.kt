@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.aicp.oneplus
+package com.aicp.oneplus.OneplusParts
 
 import android.app.Activity
 import android.app.ActivityManager
@@ -13,10 +13,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.preference.*
 
-import com.aicp.oneplus.audio.*;
-import com.aicp.oneplus.R;
-import com.aicp.oneplus.preferences.CustomSeekBarPreference
-import com.aicp.oneplus.services.FPSInfoService
+import com.aicp.oneplus.OneplusParts.audio.*;
+import com.aicp.oneplus.OneplusParts.R;
+import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
+import com.aicp.oneplus.OneplusParts.services.FPSInfoService
 
 class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
     // Audio gains

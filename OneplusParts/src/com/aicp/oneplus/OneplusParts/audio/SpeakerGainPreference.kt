@@ -16,27 +16,27 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 */
-package com.aicp.oneplus.audio;
+package com.aicp.oneplus.OneplusParts.audio;
 
 import android.content.Context
 import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
 
-import com.aicp.oneplus.OneplusParts
-import com.aicp.oneplus.Utils
-import com.aicp.oneplus.R
-import com.aicp.oneplus.preferences.CustomSeekBarPreference
+import com.aicp.oneplus.OneplusParts.OneplusParts
+import com.aicp.oneplus.OneplusParts.Utils
+import com.aicp.oneplus.OneplusParts.R
+import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
 
-class MicGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
+class SpeakerGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
 
     init {
         // from sound/soc/codecs/wcd9335.c
-        mFileName = context.resources.getString(R.string.pathAudioMicGain)
+        mFileName = context.resources.getString(R.string.pathAudioSpeakerGain)
         if (isSupported) {
-            mInterval = context.resources.getInteger(R.integer.audioMicGainInterval)
-            mMinValue = context.resources.getInteger(R.integer.audioMicGainMin)
-            mMaxValue = context.resources.getInteger(R.integer.audioMicGainMax)
+            mInterval = context.resources.getInteger(R.integer.audioSpeakerInterval)
+            mMinValue = context.resources.getInteger(R.integer.audioSpeakerGainMin)
+            mMaxValue = context.resources.getInteger(R.integer.audioSpeakerGainMax)
             mShowSign = false
             mUnits = ""
             mContinuousUpdates = false
@@ -66,8 +66,8 @@ class MicGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarP
     }
 
     companion object {
-        private const val TAG = "MicGainPreference"
-        var SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_MIC_GAIN
+        private const val TAG = "SpeakerGainPreference"
+        var SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_SPEAKER_GAIN
         lateinit var DEFAULT_VALUE: String
 
         private var mFileName: String? = null
@@ -77,7 +77,7 @@ class MicGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarP
             } else false
 
         fun getFile(context: Context): String? {
-            mFileName = context.resources.getString(R.string.pathAudioMicGain)
+            mFileName = context.resources.getString(R.string.pathAudioSpeakerGain)
             return if (isSupported) {
                 mFileName
             } else null
@@ -85,8 +85,7 @@ class MicGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarP
 
         fun getDefaultValue(context: Context): String {
             return if (isSupported) {
-                context.resources.getInteger(R.integer.audioMicGainDefault)
-                    .toString()
+                context.resources.getInteger(R.integer.audioSpeakerGainDefault).toString()
             } else {
                 "0"
             }

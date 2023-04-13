@@ -16,17 +16,17 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 */
-package com.aicp.oneplus.audio;
+package com.aicp.oneplus.OneplusParts.audio;
 
 import android.content.Context
 import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
 
-import com.aicp.oneplus.OneplusParts
-import com.aicp.oneplus.R
-import com.aicp.oneplus.Utils
-import com.aicp.oneplus.preferences.CustomSeekBarPreference
+import com.aicp.oneplus.OneplusParts.OneplusParts
+import com.aicp.oneplus.OneplusParts.R
+import com.aicp.oneplus.OneplusParts.Utils
+import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
 
 class HeadphoneGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
 

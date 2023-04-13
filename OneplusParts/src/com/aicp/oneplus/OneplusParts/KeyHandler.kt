@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.aicp.oneplus
+package com.aicp.oneplus.OneplusParts
 
 import android.app.NotificationManager
 import android.app.Service

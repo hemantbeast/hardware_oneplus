@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.aicp.oneplus.services;
+package com.aicp.oneplus.OneplusParts.services;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -43,8 +43,8 @@ import android.view.WindowManager;
 import android.util.Log;
 import android.util.TypedValue;
 
-import com.aicp.oneplus.Utils;
-import com.aicp.oneplus.R;
+import com.aicp.oneplus.OneplusParts.Utils;
+import com.aicp.oneplus.OneplusParts.R;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -16,7 +16,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           android:sharedUserId="android.uid.system"
-          package="com.aicp.oneplus">
+          package="com.aicp.oneplus.OneplusParts">
 
     <uses-permission android:name="android.permission.INJECT_EVENTS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -42,7 +42,7 @@
 
         <provider
             android:name=".ConfigPanelSearchIndexablesProvider"
-            android:authorities="org.lineageos.settings.device"
+            android:authorities="com.aicp.oneplus.OneplusParts"
             android:multiprocess="false"
             android:grantUriPermissions="true"
             android:permission="android.permission.READ_SEARCH_INDEXABLES"
@@ -58,7 +58,7 @@
             android:label="@string/button_panel_title"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.aicp.oneplus.ONEPLUS_SETTINGS" />
+                <action android:name="com.aicp.oneplus.OneplusParts.ONEPLUS_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

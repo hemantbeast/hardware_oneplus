@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.aicp.oneplus
+package com.aicp.oneplus.OneplusParts
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,8 +13,8 @@ import android.provider.Settings
 import androidx.preference.PreferenceManager
 import android.util.Log
 
-import com.aicp.oneplus.audio.*
-import com.aicp.oneplus.services.FPSInfoService
+import com.aicp.oneplus.OneplusParts.audio.*
+import com.aicp.oneplus.OneplusParts.services.FPSInfoService
 
 class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

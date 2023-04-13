@@ -16,27 +16,27 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 */
-package com.aicp.oneplus.audio;
+package com.aicp.oneplus.OneplusParts.audio;
 
 import android.content.Context
 import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
 
-import com.aicp.oneplus.OneplusParts
-import com.aicp.oneplus.R
-import com.aicp.oneplus.Utils
-import com.aicp.oneplus.preferences.CustomSeekBarPreference
+import com.aicp.oneplus.OneplusParts.OneplusParts
+import com.aicp.oneplus.OneplusParts.Utils
+import com.aicp.oneplus.OneplusParts.R
+import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
 
-class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
+class MicGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
 
     init {
         // from sound/soc/codecs/wcd9335.c
-        mFileName = context.resources.getString(R.string.pathAudioEarpieceGain)
+        mFileName = context.resources.getString(R.string.pathAudioMicGain)
         if (isSupported) {
-            mInterval = context.resources.getInteger(R.integer.audioEarpieceInterval)
-            mMinValue = context.resources.getInteger(R.integer.audioEarpieceMin)
-            mMaxValue = context.resources.getInteger(R.integer.audioEarpieceMax)
+            mInterval = context.resources.getInteger(R.integer.audioMicGainInterval)
+            mMinValue = context.resources.getInteger(R.integer.audioMicGainMin)
+            mMaxValue = context.resources.getInteger(R.integer.audioMicGainMax)
             mShowSign = false
             mUnits = ""
             mContinuousUpdates = false
@@ -66,8 +66,8 @@ class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSee
     }
 
     companion object {
-        private const val TAG = "EarpieceGainPreference"
-        var SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_EARPIECE_GAIN
+        private const val TAG = "MicGainPreference"
+        var SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_MIC_GAIN
         lateinit var DEFAULT_VALUE: String
 
         private var mFileName: String? = null
@@ -77,7 +77,7 @@ class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSee
             } else false
 
         fun getFile(context: Context): String? {
-            mFileName = context.resources.getString(R.string.pathAudioEarpieceGain)
+            mFileName = context.resources.getString(R.string.pathAudioMicGain)
             return if (isSupported) {
                 mFileName
             } else null
@@ -85,7 +85,8 @@ class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSee
 
         fun getDefaultValue(context: Context): String {
             return if (isSupported) {
-                context.resources.getInteger(R.integer.audioEarpieceDefault).toString()
+                context.resources.getInteger(R.integer.audioMicGainDefault)
+                    .toString()
             } else {
                 "0"
             }

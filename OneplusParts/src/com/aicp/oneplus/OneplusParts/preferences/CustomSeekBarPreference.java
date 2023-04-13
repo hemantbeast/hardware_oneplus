@@ -1,4 +1,4 @@
-package com.aicp.oneplus.preferences;
+package com.aicp.oneplus.OneplusParts.preferences;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,7 +17,7 @@ import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
-import com.aicp.oneplus.R;
+import com.aicp.oneplus.OneplusParts.R;
 
 public class CustomSeekBarPreference extends Preference implements SeekBar.OnSeekBarChangeListener {
     protected final String TAG = getClass().getName();
