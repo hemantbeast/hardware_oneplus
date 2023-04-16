@@ -131,6 +131,17 @@
 
     </com.aicp.gear.preference.SelfRemovingPreferenceCategory>
 
+    <!-- Hardware buttons -->
+    <PreferenceCategory
+        android:key="category_buttons"
+        android:title="@string/buttons_title">
+        <SwitchPreference
+            android:key="hwk"
+            android:summary="@string/swap_back_recents_summary"
+            android:title="@string/swap_back_recents_title"
+            android:persistent="true" />
+    </PreferenceCategory>
+
     <!-- USB Fast charge -->
     <PreferenceCategory
         android:key="category_usb"

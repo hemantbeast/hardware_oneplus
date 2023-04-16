@@ -16,6 +16,7 @@ import androidx.preference.*
 import com.aicp.oneplus.OneplusParts.audio.*;
 import com.aicp.oneplus.OneplusParts.R;
 import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
+import com.aicp.oneplus.OneplusParts.preferences.HWKSwitch
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
 
 class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
@@ -34,6 +35,9 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     // USB fast charge
     private var mUSB2FastChargeModeSwitch: SwitchPreference? = null
 
+    // Hardware key switch
+    private var mHWKSwitchPreference: TwoStatePreference? = null
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.main)
         requireActivity().actionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -41,6 +45,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         setAudioGainPreference()
         setFPSInfoPreference(requireContext())
         setUsbFastCharge(requireContext())
+        setHWKPreference()
     }
 
     override fun onResume() {
@@ -149,6 +154,19 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         }
     }
 
+    private fun setHWKPreference() {
+        val buttonsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_BUTTON)
+        mHWKSwitchPreference = findPreference(KEY_HWK_SWITCH)
+
+        if (mHWKSwitchPreference != null && HWKSwitch.isSupported) {
+            mHWKSwitchPreference!!.isEnabled = true
+            mHWKSwitchPreference!!.isChecked = HWKSwitch.isCurrentlyEnabled(requireContext())
+            mHWKSwitchPreference!!.onPreferenceChangeListener = HWKSwitch(requireContext())
+        } else {
+            buttonsCategory?.parent?.removePreference(buttonsCategory)
+        }
+    }
+
     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
         if (preference === mFpsInfo) {
             val enabled = newValue as Boolean
@@ -226,17 +244,17 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     companion object {
         private const val TAG = "OneplusParts"
 
-        public const val KEY_SETTINGS_PREFIX = "device_setting_"
+        const val KEY_SETTINGS_PREFIX = "device_setting_"
         private const val KEY_SHARED_PREFERENCE = "main"
 
         private const val KEY_CATEGORY_AUDIO = "category_audiogains"
         private const val KEY_CATEGORY_FPS = "category_fps"
         private const val KEY_CATEGORY_USB = "category_usb"
 
-        public const val KEY_HEADPHONE_GAIN = "headphone_gain"
-        public const val KEY_EARPIECE_GAIN = "earpiece_gain"
-        public const val KEY_MIC_GAIN = "mic_gain"
-        public const val KEY_SPEAKER_GAIN = "speaker_gain"
+        const val KEY_HEADPHONE_GAIN = "headphone_gain"
+        const val KEY_EARPIECE_GAIN = "earpiece_gain"
+        const val KEY_MIC_GAIN = "mic_gain"
+        const val KEY_SPEAKER_GAIN = "speaker_gain"
 
         const val KEY_FPS_INFO = "fps_info"
         const val KEY_FPS_INFO_POSITION = "fps_info_position"
@@ -244,6 +262,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         const val KEY_FPS_INFO_TEXT_SIZE = "fps_info_text_size"
 
         const val KEY_USB2_SWITCH = "usb2_fast_charge"
+        const val KEY_HWK_SWITCH = "hwk"
 
         fun isFeatureSupported(ctx: Context, feature: Int): Boolean {
             return try {

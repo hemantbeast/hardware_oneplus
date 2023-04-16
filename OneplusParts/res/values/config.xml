@@ -56,6 +56,9 @@
     <!-- Device fps path -->
     <string name="pathfpsInfo" />
 
+    <!-- Device hardware key path -->
+    <string name="pathHWKToggle" />
+
     <!-- Device usb fast charge path -->
     <string name="pathUsbFastCharge" />
 </resources>
