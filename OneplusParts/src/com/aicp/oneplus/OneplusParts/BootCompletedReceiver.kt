@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import android.util.Log
 
 import com.aicp.oneplus.OneplusParts.audio.*
+import com.aicp.oneplus.OneplusParts.preferences.VibratorStrengthPreference
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
 
 class BootCompletedReceiver : BroadcastReceiver() {
@@ -29,6 +30,9 @@ class BootCompletedReceiver : BroadcastReceiver() {
 
         // USB
         OneplusParts.restoreFastChargeSetting(context)
+        
+        // Vibrator
+        VibratorStrengthPreference.restore(context)
 
         // FPS
         val sharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

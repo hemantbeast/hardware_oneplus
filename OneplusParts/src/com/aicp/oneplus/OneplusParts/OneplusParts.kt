@@ -13,10 +13,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.preference.*
 
-import com.aicp.oneplus.OneplusParts.audio.*;
-import com.aicp.oneplus.OneplusParts.R;
-import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
-import com.aicp.oneplus.OneplusParts.preferences.HWKSwitch
+import com.aicp.oneplus.OneplusParts.audio.*
+import com.aicp.oneplus.OneplusParts.R
+import com.aicp.oneplus.OneplusParts.preferences.*
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
 
 class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
@@ -38,6 +37,9 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     // Hardware key switch
     private var mHWKSwitchPreference: TwoStatePreference? = null
 
+    // Vibrator
+    private var mVibratorStrength: VibratorStrengthPreference? = null
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.main)
         requireActivity().actionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -46,6 +48,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         setFPSInfoPreference(requireContext())
         setUsbFastCharge(requireContext())
         setHWKPreference()
+        setVibratorPreference()
     }
 
     override fun onResume() {
@@ -167,6 +170,17 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         }
     }
 
+    private fun setVibratorPreference() {
+        val vibratorCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_VIBRATOR)
+        mVibratorStrength = findPreference(KEY_VIBSTRENGTH)
+
+        if (mVibratorStrength != null && VibratorStrengthPreference.isSupported()) {
+            mVibratorStrength!!.isEnabled = true
+        } else {
+            vibratorCategory?.parent?.removePreference(vibratorCategory)
+        }
+    }
+
     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
         if (preference === mFpsInfo) {
             val enabled = newValue as Boolean
@@ -250,6 +264,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         private const val KEY_CATEGORY_AUDIO = "category_audiogains"
         private const val KEY_CATEGORY_FPS = "category_fps"
         private const val KEY_CATEGORY_USB = "category_usb"
+        private const val KEY_CATEGORY_VIBRATOR = "category_vibrator"
 
         const val KEY_HEADPHONE_GAIN = "headphone_gain"
         const val KEY_EARPIECE_GAIN = "earpiece_gain"
@@ -263,6 +278,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
         const val KEY_USB2_SWITCH = "usb2_fast_charge"
         const val KEY_HWK_SWITCH = "hwk"
+        const val KEY_VIBSTRENGTH = "vib_strength"
 
         fun isFeatureSupported(ctx: Context, feature: Int): Boolean {
             return try {
