@@ -264,6 +264,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         private const val KEY_CATEGORY_AUDIO = "category_audiogains"
         private const val KEY_CATEGORY_FPS = "category_fps"
         private const val KEY_CATEGORY_USB = "category_usb"
+        private const val KEY_CATEGORY_BUTTON = "category_buttons"
         private const val KEY_CATEGORY_VIBRATOR = "category_vibrator"
 
         const val KEY_HEADPHONE_GAIN = "headphone_gain"
