@@ -72,5 +72,18 @@
         <service
             android:name=".services.FPSInfoService"
             android:exported="false" />
+
+        <!-- Quick Settings Tiles -->
+        <service
+            android:name="com.aicp.oneplus.OneplusParts.backlight.DCModeTileService"
+            android:exported="false"
+            android:icon="@drawable/ic_dimming_off"
+            android:label="@string/backlight_dimmer_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action
+                    android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest>

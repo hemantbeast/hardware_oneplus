@@ -14,6 +14,7 @@ import android.view.MenuItem
 import androidx.preference.*
 
 import com.aicp.oneplus.OneplusParts.audio.*
+import com.aicp.oneplus.OneplusParts.backlight.DCModeSwitch
 import com.aicp.oneplus.OneplusParts.R
 import com.aicp.oneplus.OneplusParts.preferences.*
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
@@ -30,6 +31,9 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     private var mFpsInfoColor: ListPreference? = null
     private var mFpsInfo: SwitchPreference? = null
     private var mFpsInfoTextSizePreference: CustomSeekBarPreference? = null
+
+    // Backlight dimmer
+    private var mBacklightSwitch: TwoStatePreference? = null
 
     // USB fast charge
     private var mUSB2FastChargeModeSwitch: SwitchPreference? = null
@@ -49,6 +53,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         setUsbFastCharge(requireContext())
         setHWKPreference()
         setVibratorPreference()
+        setBacklightDimmer()
     }
 
     override fun onResume() {
@@ -59,6 +64,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         }
     }
 
+    // Audio gain initialization
     private fun setAudioGainPreference() {
         val audioGainsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_AUDIO)
         var audioGainsRemoved = 0
@@ -106,6 +112,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         if (audioGainsRemoved == 4) audioGainsCategory?.parent?.removePreference(audioGainsCategory)
     }
 
+    // FPS overlay initialization
     private fun setFPSInfoPreference(context: Context) {
         val prefs = requireActivity().getSharedPreferences(
             KEY_SHARED_PREFERENCE,
@@ -120,18 +127,19 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
         mFpsInfo = findPreference(KEY_FPS_INFO)
         mFpsInfo?.isChecked = prefs.getBoolean(KEY_FPS_INFO, false)
-        mFpsInfo?.setOnPreferenceChangeListener(this)
+        mFpsInfo?.onPreferenceChangeListener = this
 
         mFpsInfoPosition = findPreference(KEY_FPS_INFO_POSITION)
-        mFpsInfoPosition?.setOnPreferenceChangeListener(this)
+        mFpsInfoPosition?.onPreferenceChangeListener = this
 
         mFpsInfoColor = findPreference(KEY_FPS_INFO_COLOR)
-        mFpsInfoColor?.setOnPreferenceChangeListener(this)
+        mFpsInfoColor?.onPreferenceChangeListener = this
 
-        mFpsInfoTextSizePreference = findPreference(KEY_FPS_INFO_TEXT_SIZE);
-        mFpsInfoTextSizePreference?.setOnPreferenceChangeListener(this)
+        mFpsInfoTextSizePreference = findPreference(KEY_FPS_INFO_TEXT_SIZE)
+        mFpsInfoTextSizePreference?.onPreferenceChangeListener = this
     }
 
+    // USB fast charge initialization
     private fun setUsbFastCharge(context: Context) {
         val prefs = requireActivity().getSharedPreferences(
             KEY_SHARED_PREFERENCE,
@@ -157,6 +165,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         }
     }
 
+    // HWK button initialization
     private fun setHWKPreference() {
         val buttonsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_BUTTON)
         mHWKSwitchPreference = findPreference(KEY_HWK_SWITCH)
@@ -170,6 +179,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         }
     }
 
+    // Vibrator strength initialization
     private fun setVibratorPreference() {
         val vibratorCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_VIBRATOR)
         mVibratorStrength = findPreference(KEY_VIBSTRENGTH)
@@ -178,6 +188,20 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
             mVibratorStrength!!.isEnabled = true
         } else {
             vibratorCategory?.parent?.removePreference(vibratorCategory)
+        }
+    }
+
+    // Backlight dimmer initialization
+    private fun setBacklightDimmer() {
+        val backlightCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_BACKLIGHT)
+        mBacklightSwitch = findPreference(KEY_BACKLIGHT)
+
+        if (mBacklightSwitch != null && DCModeSwitch.isSupported) {
+            mBacklightSwitch!!.isEnabled = true
+            mBacklightSwitch!!.isChecked = DCModeSwitch.isCurrentlyEnabled(requireContext())
+            mBacklightSwitch!!.onPreferenceChangeListener = DCModeSwitch(requireContext())
+        } else {
+            backlightCategory?.parent?.removePreference(backlightCategory)
         }
     }
 
@@ -231,6 +255,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         return false
     }
 
+    @Suppress("DEPRECATION")
     private fun isFPSOverlayRunning(): Boolean {
         val am = requireContext().getSystemService(
             Context.ACTIVITY_SERVICE
@@ -261,25 +286,31 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         const val KEY_SETTINGS_PREFIX = "device_setting_"
         private const val KEY_SHARED_PREFERENCE = "main"
 
+        // Categories
         private const val KEY_CATEGORY_AUDIO = "category_audiogains"
         private const val KEY_CATEGORY_FPS = "category_fps"
         private const val KEY_CATEGORY_USB = "category_usb"
         private const val KEY_CATEGORY_BUTTON = "category_buttons"
         private const val KEY_CATEGORY_VIBRATOR = "category_vibrator"
+        private const val KEY_CATEGORY_BACKLIGHT = "category_backlight"
 
+        // Audio gains
         const val KEY_HEADPHONE_GAIN = "headphone_gain"
         const val KEY_EARPIECE_GAIN = "earpiece_gain"
         const val KEY_MIC_GAIN = "mic_gain"
         const val KEY_SPEAKER_GAIN = "speaker_gain"
 
+        // FPS
         const val KEY_FPS_INFO = "fps_info"
         const val KEY_FPS_INFO_POSITION = "fps_info_position"
         const val KEY_FPS_INFO_COLOR = "fps_info_color"
         const val KEY_FPS_INFO_TEXT_SIZE = "fps_info_text_size"
 
+        // Misc
         const val KEY_USB2_SWITCH = "usb2_fast_charge"
         const val KEY_HWK_SWITCH = "hwk"
         const val KEY_VIBSTRENGTH = "vib_strength"
+        const val KEY_BACKLIGHT = "backlight"
 
         fun isFeatureSupported(ctx: Context, feature: Int): Boolean {
             return try {

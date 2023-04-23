@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import android.util.Log
 
 import com.aicp.oneplus.OneplusParts.audio.*
+import com.aicp.oneplus.OneplusParts.backlight.DCModeSwitch
 import com.aicp.oneplus.OneplusParts.preferences.VibratorStrengthPreference
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
 
@@ -27,6 +28,9 @@ class BootCompletedReceiver : BroadcastReceiver() {
         HeadphoneGainPreference.restore(context)
         MicGainPreference.restore(context)
         SpeakerGainPreference.restore(context)
+
+        // Backlight dimmer
+        DCModeSwitch.restore(context)
 
         // USB
         OneplusParts.restoreFastChargeSetting(context)

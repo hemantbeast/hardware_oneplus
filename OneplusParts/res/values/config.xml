@@ -56,6 +56,9 @@
     <!-- Device fps path -->
     <string name="pathfpsInfo" />
 
+    <!-- Device backlight dimmer path -->
+    <string name="pathBacklightDimmer" />
+
     <!-- Device hardware key path -->
     <string name="pathHWKToggle" />
 

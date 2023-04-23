@@ -76,6 +76,28 @@
             android:summary="@string/speaker_gain_summary" />
     </PreferenceCategory>
 
+    <!-- Backlight dimmer -->
+    <PreferenceCategory
+        android:key="category_backlight"
+        android:title="@string/category_backlight_dimmer">
+        <SwitchPreference
+            android:key="backlight"
+            android:summary="@string/backlight_dimmer_summary"
+            android:title="@string/backlight_dimmer_title"
+            android:persistent="true" />
+    </PreferenceCategory>
+
+    <!-- Hardware buttons -->
+    <PreferenceCategory
+        android:key="category_buttons"
+        android:title="@string/buttons_title">
+        <SwitchPreference
+            android:key="hwk"
+            android:summary="@string/swap_back_recents_summary"
+            android:title="@string/swap_back_recents_title"
+            android:persistent="true" />
+    </PreferenceCategory>
+
     <!-- Start of fps Category -->
     <PreferenceCategory
         android:key="category_fps"
@@ -130,17 +152,6 @@
         </Preference>
 
     </com.aicp.gear.preference.SelfRemovingPreferenceCategory>
-
-    <!-- Hardware buttons -->
-    <PreferenceCategory
-        android:key="category_buttons"
-        android:title="@string/buttons_title">
-        <SwitchPreference
-            android:key="hwk"
-            android:summary="@string/swap_back_recents_summary"
-            android:title="@string/swap_back_recents_title"
-            android:persistent="true" />
-    </PreferenceCategory>
 
     <!-- USB Fast charge -->
     <PreferenceCategory
