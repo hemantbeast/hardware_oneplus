@@ -5,19 +5,25 @@
 
 package com.aicp.oneplus.OneplusParts
 
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.preference.*
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
+import androidx.preference.TwoStatePreference
 
 import com.aicp.oneplus.OneplusParts.audio.*
 import com.aicp.oneplus.OneplusParts.backlight.DCModeSwitch
 import com.aicp.oneplus.OneplusParts.R
 import com.aicp.oneplus.OneplusParts.preferences.*
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
+import com.aicp.oneplus.OneplusParts.utils.SPUtils
+import com.aicp.oneplus.OneplusParts.utils.Utils
 
 class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
     // Audio gains
@@ -66,20 +72,20 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
     // Audio gain initialization
     private fun setAudioGainPreference() {
-        val audioGainsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_AUDIO)
+        val audioGainsCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_AUDIO)
         var audioGainsRemoved = 0
 
-        mEarGain = findPreference(KEY_EARPIECE_GAIN)
+        mEarGain = findPreference(Constants.KEY_EARPIECE_GAIN)
         if (mEarGain != null) {
             if (mEarGain!!.supported()) {
-                mEarGain?.isEnabled = mEarGain!!.supported()
+                mEarGain?.isEnabled = true
             } else {
                 mEarGain?.parent?.removePreference(mEarGain!!)
                 audioGainsRemoved += 1
             }
         }
 
-        mHeadphoneGain = findPreference(KEY_HEADPHONE_GAIN);
+        mHeadphoneGain = findPreference(Constants.KEY_HEADPHONE_GAIN)
         if (mHeadphoneGain != null) {
             if (mHeadphoneGain!!.supported()) {
                 mHeadphoneGain?.isEnabled = true
@@ -89,7 +95,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
             }
         }
 
-        mMicGain = findPreference(KEY_MIC_GAIN)
+        mMicGain = findPreference(Constants.KEY_MIC_GAIN)
         if (mMicGain != null) {
             if (mMicGain!!.supported()) {
                 mMicGain?.isEnabled = true
@@ -99,7 +105,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
             }
         }
 
-        mSpeakerGain = findPreference(KEY_SPEAKER_GAIN)
+        mSpeakerGain = findPreference(Constants.KEY_SPEAKER_GAIN)
         if (mSpeakerGain != null) {
             if (mSpeakerGain!!.supported()) {
                 mSpeakerGain?.isEnabled = true
@@ -114,50 +120,42 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
     // FPS overlay initialization
     private fun setFPSInfoPreference(context: Context) {
-        val prefs = requireActivity().getSharedPreferences(
-            KEY_SHARED_PREFERENCE,
-            Activity.MODE_PRIVATE
-        )
-
-        val fpsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_FPS)
+        val fpsCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_FPS)
         if (!isFeatureSupported(context, R.string.pathfpsInfo)) {
             fpsCategory?.parent?.removePreference(fpsCategory)
             return
         }
 
-        mFpsInfo = findPreference(KEY_FPS_INFO)
-        mFpsInfo?.isChecked = prefs.getBoolean(KEY_FPS_INFO, false)
+        mFpsInfo = findPreference(Constants.KEY_FPS_INFO)
+        mFpsInfo?.isChecked = SPUtils.getBooleanValue(context,
+            Constants.KEY_SETTINGS_PREFIX + Constants.KEY_FPS_INFO, false)
         mFpsInfo?.onPreferenceChangeListener = this
 
-        mFpsInfoPosition = findPreference(KEY_FPS_INFO_POSITION)
+        mFpsInfoPosition = findPreference(Constants.KEY_FPS_INFO_POSITION)
         mFpsInfoPosition?.onPreferenceChangeListener = this
 
-        mFpsInfoColor = findPreference(KEY_FPS_INFO_COLOR)
+        mFpsInfoColor = findPreference(Constants.KEY_FPS_INFO_COLOR)
         mFpsInfoColor?.onPreferenceChangeListener = this
 
-        mFpsInfoTextSizePreference = findPreference(KEY_FPS_INFO_TEXT_SIZE)
+        mFpsInfoTextSizePreference = findPreference(Constants.KEY_FPS_INFO_TEXT_SIZE)
         mFpsInfoTextSizePreference?.onPreferenceChangeListener = this
     }
 
     // USB fast charge initialization
     private fun setUsbFastCharge(context: Context) {
-        val prefs = requireActivity().getSharedPreferences(
-            KEY_SHARED_PREFERENCE,
-            Activity.MODE_PRIVATE
-        )
-
-        val usbCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_USB)
+        val usbCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_USB)
         if (!isFeatureSupported(context, R.string.pathUsbFastCharge)) {
             usbCategory?.parent?.removePreference(usbCategory)
             return
         }
 
-        mUSB2FastChargeModeSwitch = findPreference(KEY_USB2_SWITCH)
+        mUSB2FastChargeModeSwitch = findPreference(Constants.KEY_USB2_SWITCH)
         val isFileWritable = Utils.fileWritable(getString(R.string.pathUsbFastCharge))
 
         if (isFileWritable) {
             mUSB2FastChargeModeSwitch?.isEnabled = true
-            mUSB2FastChargeModeSwitch?.isChecked = prefs.getBoolean(KEY_USB2_SWITCH,
+            mUSB2FastChargeModeSwitch?.isChecked = SPUtils.getBooleanValue(context,
+                Constants.KEY_SETTINGS_PREFIX + Constants.KEY_USB2_SWITCH,
                 Utils.getFileValueAsBoolean(getString(R.string.pathUsbFastCharge), false))
             mUSB2FastChargeModeSwitch?.onPreferenceChangeListener = this
         } else {
@@ -167,8 +165,8 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
     // HWK button initialization
     private fun setHWKPreference() {
-        val buttonsCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_BUTTON)
-        mHWKSwitchPreference = findPreference(KEY_HWK_SWITCH)
+        val buttonsCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_BUTTON)
+        mHWKSwitchPreference = findPreference(Constants.KEY_HWK_SWITCH)
 
         if (mHWKSwitchPreference != null && HWKSwitch.isSupported) {
             mHWKSwitchPreference!!.isEnabled = true
@@ -181,8 +179,8 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
     // Vibrator strength initialization
     private fun setVibratorPreference() {
-        val vibratorCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_VIBRATOR)
-        mVibratorStrength = findPreference(KEY_VIBSTRENGTH)
+        val vibratorCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_VIBRATOR)
+        mVibratorStrength = findPreference(Constants.KEY_VIB_STRENGTH)
 
         if (mVibratorStrength != null && VibratorStrengthPreference.isSupported) {
             mVibratorStrength!!.isEnabled = true
@@ -193,8 +191,8 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
     // Backlight dimmer initialization
     private fun setBacklightDimmer() {
-        val backlightCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_BACKLIGHT)
-        mBacklightSwitch = findPreference(KEY_BACKLIGHT)
+        val backlightCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_BACKLIGHT)
+        mBacklightSwitch = findPreference(Constants.KEY_BACKLIGHT)
 
         if (mBacklightSwitch != null && DCModeSwitch.isSupported) {
             mBacklightSwitch!!.isEnabled = true
@@ -247,9 +245,9 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
             return true
         } else if (preference == mUSB2FastChargeModeSwitch) {
             val enabled = newValue as Boolean
-            val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            sharedPrefs.edit().putBoolean(KEY_USB2_SWITCH, enabled).apply()
             Utils.writeValue(getString(R.string.pathUsbFastCharge), if (enabled) "1" else "0")
+            SPUtils.putBooleanValue(requireContext(),
+                Constants.KEY_SETTINGS_PREFIX + Constants.KEY_USB2_SWITCH, enabled)
             return true
         }
         return false
@@ -260,7 +258,12 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         val am = requireContext().getSystemService(
             Context.ACTIVITY_SERVICE
         ) as ActivityManager
-        for (service in am.getRunningServices(Int.MAX_VALUE)) if (FPSInfoService::class.java.name == service.service.className) return true
+
+        for (service in am.getRunningServices(Int.MAX_VALUE)){
+            if (FPSInfoService::class.java.name == service.service.className) {
+                return true
+            }
+        }
         return false
     }
 
@@ -281,37 +284,6 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     }
 
     companion object {
-        private const val TAG = "OneplusParts"
-
-        const val KEY_SETTINGS_PREFIX = "device_setting_"
-        private const val KEY_SHARED_PREFERENCE = "main"
-
-        // Categories
-        private const val KEY_CATEGORY_AUDIO = "category_audiogains"
-        private const val KEY_CATEGORY_FPS = "category_fps"
-        private const val KEY_CATEGORY_USB = "category_usb"
-        private const val KEY_CATEGORY_BUTTON = "category_buttons"
-        private const val KEY_CATEGORY_VIBRATOR = "category_vibrator"
-        private const val KEY_CATEGORY_BACKLIGHT = "category_backlight"
-
-        // Audio gains
-        const val KEY_HEADPHONE_GAIN = "headphone_gain"
-        const val KEY_EARPIECE_GAIN = "earpiece_gain"
-        const val KEY_MIC_GAIN = "mic_gain"
-        const val KEY_SPEAKER_GAIN = "speaker_gain"
-
-        // FPS
-        const val KEY_FPS_INFO = "fps_info"
-        const val KEY_FPS_INFO_POSITION = "fps_info_position"
-        const val KEY_FPS_INFO_COLOR = "fps_info_color"
-        const val KEY_FPS_INFO_TEXT_SIZE = "fps_info_text_size"
-
-        // Misc
-        const val KEY_USB2_SWITCH = "usb2_fast_charge"
-        const val KEY_HWK_SWITCH = "hwk"
-        const val KEY_VIBSTRENGTH = "vib_strength"
-        const val KEY_BACKLIGHT = "backlight"
-
         fun isFeatureSupported(ctx: Context, feature: Int): Boolean {
             return try {
                 ctx.resources.getString(feature).isNotEmpty()
@@ -323,9 +295,8 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
         fun restoreFastChargeSetting(context: Context) {
             if (Utils.fileWritable(context.getString(R.string.pathUsbFastCharge))) {
-                val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
-                val value = sharedPrefs.getBoolean(
-                    KEY_USB2_SWITCH,
+                val value = SPUtils.getBooleanValue(context,
+                    Constants.KEY_SETTINGS_PREFIX + Constants.KEY_USB2_SWITCH,
                     Utils.getFileValueAsBoolean(context.getString(R.string.pathUsbFastCharge), false)
                 )
                 Utils.writeValue(context.getString(R.string.pathUsbFastCharge), if (value) "1" else "0")

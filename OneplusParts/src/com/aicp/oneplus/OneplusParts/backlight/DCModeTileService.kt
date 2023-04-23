@@ -1,13 +1,12 @@
 package com.aicp.oneplus.OneplusParts.backlight
 
-import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import androidx.preference.PreferenceManager
 
 import com.aicp.oneplus.OneplusParts.R
-import com.aicp.oneplus.OneplusParts.Utils
+import com.aicp.oneplus.OneplusParts.utils.SPUtils
+import com.aicp.oneplus.OneplusParts.utils.Utils
 
 
 class DCModeTileService : TileService() {
@@ -21,11 +20,9 @@ class DCModeTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        val sharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
         enabled = DCModeSwitch.isCurrentlyEnabled(this)
         Utils.writeValue(DCModeSwitch.getFile(this), if (enabled) "0" else "1")
-        sharedPrefs.edit().putBoolean(DCModeSwitch.SETTINGS_KEY, !enabled).apply()
+        SPUtils.putStringValue(this, DCModeSwitch.SETTINGS_KEY, if (enabled) "1" else "0")
         setTile()
     }
 

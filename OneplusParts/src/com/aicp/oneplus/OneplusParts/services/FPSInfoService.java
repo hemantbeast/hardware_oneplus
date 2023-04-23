@@ -25,7 +25,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.IBinder;
@@ -33,7 +32,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.provider.Settings;
 import android.service.dreams.DreamService;
 import android.service.dreams.IDreamManager;
 import android.view.ContextThemeWrapper;
@@ -43,12 +41,12 @@ import android.view.WindowManager;
 import android.util.Log;
 import android.util.TypedValue;
 
-import com.aicp.oneplus.OneplusParts.Utils;
 import com.aicp.oneplus.OneplusParts.R;
+import com.aicp.oneplus.OneplusParts.utils.SPUtils;
+import com.aicp.oneplus.OneplusParts.utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.lang.StringBuffer;
 import java.lang.Math;
 
 public class FPSInfoService extends Service {
@@ -388,11 +386,11 @@ public class FPSInfoService extends Service {
     }
 
     private static int getPosition(Context context) {
-        return Settings.System.getInt(context.getContentResolver(), POSITION_KEY, POSITION_TOP_LEFT);
+        return SPUtils.INSTANCE.getIntValue(context, POSITION_KEY, POSITION_TOP_LEFT);
     }
 
     public static void setPosition(Context context, int position) {
-        Settings.System.putInt(context.getContentResolver(), POSITION_KEY, position);
+        SPUtils.INSTANCE.putIntValue(context, POSITION_KEY, position);
     }
 
     public static boolean isPositionChanged(Context context, int position) {
@@ -400,11 +398,11 @@ public class FPSInfoService extends Service {
     }
 
     private static int getColorIndex(Context context) {
-        return Settings.System.getInt(context.getContentResolver(), COLOR_KEY, 0);
+        return SPUtils.INSTANCE.getIntValue(context, COLOR_KEY, 0);
     }
 
     public static void setColorIndex(Context context, int index) {
-        Settings.System.putInt(context.getContentResolver(), COLOR_KEY, index);
+        SPUtils.INSTANCE.putIntValue(context, COLOR_KEY, index);
     }
 
     public static boolean isColorChanged(Context context, int index) {
@@ -412,7 +410,7 @@ public class FPSInfoService extends Service {
     }
 
     private static int getSizeIndex(Context context) {
-        return Settings.System.getInt(context.getContentResolver(), SIZE_KEY, 2);
+        return SPUtils.INSTANCE.getIntValue(context, SIZE_KEY, 2);
     }
 
     private static int getSize(Context context) {
@@ -420,7 +418,7 @@ public class FPSInfoService extends Service {
     }
 
     public static void setSizeIndex(Context context, int index) {
-        Settings.System.putInt(context.getContentResolver(), SIZE_KEY, index);
+        SPUtils.INSTANCE.putIntValue(context, SIZE_KEY, index);
     }
 
     public static boolean isSizeChanged(Context context, int index) {

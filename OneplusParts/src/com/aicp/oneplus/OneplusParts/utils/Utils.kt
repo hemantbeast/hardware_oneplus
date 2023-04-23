@@ -16,7 +16,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 */
-package com.aicp.oneplus.OneplusParts
+package com.aicp.oneplus.OneplusParts.utils
 
 import android.util.Log
 import java.io.*
@@ -200,7 +200,7 @@ object Utils {
     fun getFileValueAsBoolean(filename: String?, defValue: Boolean): Boolean {
         val fileValue = readLine(filename)
         if (DEBUG) Log.d(TAG, "getFileValueAsBoolean: " + fileValue + " :" + ("0" != fileValue))
-        return if (fileValue != null && fileValue.isNotEmpty()) {
+        return if (!fileValue.isNullOrEmpty()) {
             "0" != fileValue
         } else defValue
     }
@@ -213,7 +213,7 @@ object Utils {
     @JvmStatic
     fun getFileValue(filename: String?, defValue: String): String {
         val fileValue = readLine(filename)
-        return if (fileValue != null && fileValue.isNotEmpty()) {
+        return if (!fileValue.isNullOrEmpty()) {
             fileValue
         } else defValue
     }

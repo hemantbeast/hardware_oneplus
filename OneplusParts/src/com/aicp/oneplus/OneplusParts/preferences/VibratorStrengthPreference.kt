@@ -1,16 +1,15 @@
 package com.aicp.oneplus.OneplusParts.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.AttributeSet
-import androidx.preference.PreferenceManager
 
-import com.aicp.oneplus.OneplusParts.OneplusParts
+import com.aicp.oneplus.OneplusParts.Constants
 import com.aicp.oneplus.OneplusParts.R
-import com.aicp.oneplus.OneplusParts.Utils
+import com.aicp.oneplus.OneplusParts.utils.SPUtils
+import com.aicp.oneplus.OneplusParts.utils.Utils
 
 
 class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
@@ -30,7 +29,7 @@ class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : Custo
 
         mDefaultValueExists = true
         mDefaultValue = context.resources.getInteger(R.integer.vibratorDefaultMV)
-        DEFAULT_VALUE = mDefaultValueText
+        DEFAULT_VALUE = mDefaultValue.toString()
         mValue = getValue(context).toInt()
         isPersistent = false
 
@@ -39,24 +38,17 @@ class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : Custo
     }
 
     override fun changeValue(newValue: Int) {
-        setValue(newValue.toString(), true)
+        setValue(newValue.toString())
     }
 
-    fun setValue(newValue: String, withFeedback: Boolean) {
+    fun setValue(newValue: String) {
         Utils.writeValue(mFileName, newValue)
-        val editor: SharedPreferences.Editor = PreferenceManager.getDefaultSharedPreferences(
-            context
-        ).edit()
-        editor.putString(SETTINGS_KEY, newValue)
-        editor.apply()
-
-        if (withFeedback) {
-            mVibrator!!.vibrate(VibrationEffect.createWaveform(testVibrationPattern, -1))
-        }
+        SPUtils.putStringValue(context, SETTINGS_KEY, newValue)
+        mVibrator?.vibrate(VibrationEffect.createWaveform(testVibrationPattern, -1))
     }
 
     companion object {
-        private const val SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_VIBSTRENGTH
+        private const val SETTINGS_KEY = Constants.KEY_SETTINGS_PREFIX + Constants.KEY_VIB_STRENGTH
         private val testVibrationPattern = longArrayOf(0, 250)
 
         private var mFileName: String? = null
@@ -85,13 +77,7 @@ class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : Custo
             if (!isSupported) {
                 return
             }
-
-            var storedValue = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(SETTINGS_KEY, DEFAULT_VALUE)
-
-            if (storedValue == null) {
-                storedValue = DEFAULT_VALUE
-            }
+            val storedValue = SPUtils.getStringValue(context, SETTINGS_KEY, DEFAULT_VALUE)
             Utils.writeValue(mFileName, storedValue)
         }
     }

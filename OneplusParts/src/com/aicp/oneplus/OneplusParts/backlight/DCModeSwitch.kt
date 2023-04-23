@@ -2,14 +2,13 @@ package com.aicp.oneplus.OneplusParts.backlight
 
 import android.content.Context
 import android.os.Build
-import android.provider.Settings
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceChangeListener
-import androidx.preference.PreferenceManager
 
-import com.aicp.oneplus.OneplusParts.OneplusParts
+import com.aicp.oneplus.OneplusParts.Constants
 import com.aicp.oneplus.OneplusParts.R
-import com.aicp.oneplus.OneplusParts.Utils
+import com.aicp.oneplus.OneplusParts.utils.SPUtils
+import com.aicp.oneplus.OneplusParts.utils.Utils
 
 
 class DCModeSwitch(context: Context) : OnPreferenceChangeListener {
@@ -22,13 +21,13 @@ class DCModeSwitch(context: Context) : OnPreferenceChangeListener {
 
     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
         val enabled = newValue as Boolean
-        Settings.System.putInt(mContext.contentResolver, SETTINGS_KEY, if (enabled) 1 else 0)
         Utils.writeValue(getFile(mContext), if (enabled) "1" else "0")
+        SPUtils.putStringValue(mContext, SETTINGS_KEY, if (enabled) "1" else "0")
         return true
     }
 
     companion object {
-        var SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_BACKLIGHT
+        var SETTINGS_KEY = Constants.KEY_SETTINGS_PREFIX + Constants.KEY_BACKLIGHT
         private var mFileName: String? = null
 
         val isSupported: Boolean
@@ -52,9 +51,8 @@ class DCModeSwitch(context: Context) : OnPreferenceChangeListener {
                 return
             }
 
-            val storedValue = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(SETTINGS_KEY, "0")
-            Utils.writeValue(getFile(context), storedValue!!)
+            val storedValue = SPUtils.getStringValue(context, SETTINGS_KEY, "0")
+            Utils.writeValue(getFile(context), storedValue)
 
             // Oneplus 5/5t configuration
             if (Build.DEVICE.equals("OnePlus5")) {

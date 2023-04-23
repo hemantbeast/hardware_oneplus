@@ -16,17 +16,16 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 */
-package com.aicp.oneplus.OneplusParts.audio;
+package com.aicp.oneplus.OneplusParts.audio
 
 import android.content.Context
-import android.provider.Settings
 import android.util.AttributeSet
-import android.util.Log
 
-import com.aicp.oneplus.OneplusParts.OneplusParts
+import com.aicp.oneplus.OneplusParts.Constants
 import com.aicp.oneplus.OneplusParts.R
-import com.aicp.oneplus.OneplusParts.Utils
 import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
+import com.aicp.oneplus.OneplusParts.utils.SPUtils
+import com.aicp.oneplus.OneplusParts.utils.Utils
 
 class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
 
@@ -42,8 +41,8 @@ class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSee
             mContinuousUpdates = false
         }
         mDefaultValueExists = true
-        DEFAULT_VALUE = getDefaultValue(context)
-        mDefaultValue = DEFAULT_VALUE.toInt()
+        mDefaultValue = getDefaultValue(context)
+        DEFAULT_VALUE = mDefaultValue.toString()
         mValue = getValue(context).toInt()
         isPersistent = false
     }
@@ -62,15 +61,15 @@ class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSee
 
     private fun setValue(newValue: String) {
         Utils.writeValue(mFileName, newValue)
-        Settings.System.putString(context.contentResolver, SETTINGS_KEY, newValue)
+        SPUtils.putStringValue(context, SETTINGS_KEY, newValue)
     }
 
     companion object {
-        private const val TAG = "EarpieceGainPreference"
-        var SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_EARPIECE_GAIN
-        lateinit var DEFAULT_VALUE: String
+        var SETTINGS_KEY = Constants.KEY_SETTINGS_PREFIX + Constants.KEY_EARPIECE_GAIN
 
         private var mFileName: String? = null
+        lateinit var DEFAULT_VALUE: String
+
         val isSupported: Boolean
             get() = if (mFileName != null && mFileName!!.isNotEmpty()) {
                 Utils.fileWritable(mFileName)
@@ -83,11 +82,11 @@ class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSee
             } else null
         }
 
-        fun getDefaultValue(context: Context): String {
+        fun getDefaultValue(context: Context): Int {
             return if (isSupported) {
-                context.resources.getInteger(R.integer.audioEarpieceDefault).toString()
+                context.resources.getInteger(R.integer.audioEarpieceDefault)
             } else {
-                "0"
+                0
             }
         }
 
@@ -95,10 +94,7 @@ class EarpieceGainPreference(context: Context, attrs: AttributeSet?) : CustomSee
             if (!isSupported) {
                 return
             }
-            var storedValue = Settings.System.getString(context.contentResolver, SETTINGS_KEY)
-            if (storedValue == null) {
-                storedValue = DEFAULT_VALUE
-            }
+            val storedValue = SPUtils.getStringValue(context, SETTINGS_KEY, DEFAULT_VALUE)
             Utils.writeValue(mFileName, storedValue)
         }
     }
