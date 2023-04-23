@@ -174,7 +174,7 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         val vibratorCategory = findPreference<PreferenceCategory>(KEY_CATEGORY_VIBRATOR)
         mVibratorStrength = findPreference(KEY_VIBSTRENGTH)
 
-        if (mVibratorStrength != null && VibratorStrengthPreference.isSupported()) {
+        if (mVibratorStrength != null && VibratorStrengthPreference.isSupported) {
             mVibratorStrength!!.isEnabled = true
         } else {
             vibratorCategory?.parent?.removePreference(vibratorCategory)

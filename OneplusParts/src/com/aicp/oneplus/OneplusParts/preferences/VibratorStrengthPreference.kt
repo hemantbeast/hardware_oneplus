@@ -6,44 +6,44 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.AttributeSet
-import android.widget.SeekBar
-import androidx.preference.Preference
 import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceViewHolder
 
 import com.aicp.oneplus.OneplusParts.OneplusParts
 import com.aicp.oneplus.OneplusParts.R
 import com.aicp.oneplus.OneplusParts.Utils
 
 
-class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs), SeekBar.OnSeekBarChangeListener {
-    private var mSeekBar: SeekBar? = null
-    private var mOldStrength = 0
-    private var mMinValue = 0
-    private var mMaxValue = 0
+class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
     private var mVibrator: Vibrator? = null
 
     init {
-        mMinValue = 116
-        mMaxValue = 1800
+        mFileName = context.resources.getString(R.string.pathSystemVibStrength)
+
+        if (isSupported) {
+            mInterval = context.resources.getInteger(R.integer.vibratorInterval)
+            mMinValue = context.resources.getInteger(R.integer.vibratorMinMV)
+            mMaxValue = context.resources.getInteger(R.integer.vibratorMaxMV)
+            mShowSign = false
+            mUnits = ""
+            mContinuousUpdates = false
+        }
+
+        mDefaultValueExists = true
+        mDefaultValue = context.resources.getInteger(R.integer.vibratorDefaultMV)
+        DEFAULT_VALUE = mDefaultValueText
+        mValue = getValue(context).toInt()
+        isPersistent = false
 
         val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
         mVibrator = vibratorManager.defaultVibrator
-        layoutResource = R.layout.preference_seek_bar
     }
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder) {
-        super.onBindViewHolder(holder)
-
-        mOldStrength = getValue(context).toInt()
-        mSeekBar = holder.findViewById(R.id.seekbar) as SeekBar
-        mSeekBar!!.max = mMaxValue - mMinValue
-        mSeekBar!!.progress = mOldStrength - mMinValue
-        mSeekBar!!.setOnSeekBarChangeListener(this)
+    override fun changeValue(newValue: Int) {
+        setValue(newValue.toString(), true)
     }
 
     fun setValue(newValue: String, withFeedback: Boolean) {
-        Utils.writeValue(FILE_LEVEL, newValue)
+        Utils.writeValue(mFileName, newValue)
         val editor: SharedPreferences.Editor = PreferenceManager.getDefaultSharedPreferences(
             context
         ).edit()
@@ -55,40 +55,44 @@ class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : Prefe
         }
     }
 
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        // NA
-    }
-
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-        // NA
-    }
-
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        setValue("${seekBar?.progress?.plus(mMinValue)}", true)
-    }
-
     companion object {
         private const val SETTINGS_KEY = OneplusParts.KEY_SETTINGS_PREFIX + OneplusParts.KEY_VIBSTRENGTH
-        
-        private const val FILE_LEVEL = "/sys/class/leds/vibrator/vmax_mv"
         private val testVibrationPattern = longArrayOf(0, 250)
 
-        fun isSupported(): Boolean {
-            return Utils.fileWritable(FILE_LEVEL)
+        private var mFileName: String? = null
+        lateinit var DEFAULT_VALUE: String
+
+        val isSupported: Boolean
+            get() = if (mFileName != null && mFileName!!.isNotEmpty()) {
+                Utils.fileWritable(mFileName)
+            } else false
+
+        fun getFile(context: Context): String? {
+            mFileName = context.resources.getString(R.string.pathSystemVibStrength)
+            return if (isSupported) {
+                mFileName
+            } else null
         }
 
         fun getValue(context: Context): String {
-            return Utils.getFileValue(FILE_LEVEL, "1800")
+            if (!isSupported) {
+                return ""
+            }
+            return Utils.getFileValue(mFileName, DEFAULT_VALUE)
         }
 
         fun restore(context: Context) {
-            if (!isSupported()) {
+            if (!isSupported) {
                 return
             }
 
-            val storedValue = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(SETTINGS_KEY, "1800")
-            Utils.writeValue(FILE_LEVEL, storedValue!!)
+            var storedValue = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(SETTINGS_KEY, DEFAULT_VALUE)
+
+            if (storedValue == null) {
+                storedValue = DEFAULT_VALUE
+            }
+            Utils.writeValue(mFileName, storedValue)
         }
     }
 }

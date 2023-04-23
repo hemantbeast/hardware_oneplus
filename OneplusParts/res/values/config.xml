@@ -61,4 +61,13 @@
 
     <!-- Device usb fast charge path -->
     <string name="pathUsbFastCharge" />
+
+    <!-- System vibration sysfs node path -->
+    <string name="pathSystemVibStrength" />
+
+    <!-- Device vibrator min-max-default values -->
+    <integer name="vibratorMinMV">0</integer>
+    <integer name="vibratorMaxMV">0</integer>
+    <integer name="vibratorDefaultMV">0</integer>
+    <integer name="vibratorInterval">1</integer>
 </resources>
