@@ -171,8 +171,12 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     // HWK button initialization
     private fun setHWKPreference() {
         val buttonsCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_BUTTON)
-        mHWKSwitchPreference = findPreference(Constants.KEY_HWK_SWITCH)
+        if (!isFeatureSupported(requireContext(), R.string.pathHWKToggle)) {
+            buttonsCategory?.parent?.removePreference(buttonsCategory)
+            return
+        }
 
+        mHWKSwitchPreference = findPreference(Constants.KEY_HWK_SWITCH)
         if (mHWKSwitchPreference != null && HWKSwitch.isSupported) {
             mHWKSwitchPreference!!.isEnabled = true
             mHWKSwitchPreference!!.isChecked = HWKSwitch.isCurrentlyEnabled(requireContext())
@@ -185,8 +189,12 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     // Vibrator strength initialization
     private fun setVibratorPreference() {
         val vibratorCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_VIBRATOR)
-        mVibratorStrength = findPreference(Constants.KEY_VIB_STRENGTH)
+        if (!isFeatureSupported(requireContext(), R.string.pathSystemVibStrength)) {
+            vibratorCategory?.parent?.removePreference(vibratorCategory)
+            return
+        }
 
+        mVibratorStrength = findPreference(Constants.KEY_VIB_STRENGTH)
         if (mVibratorStrength != null && VibratorStrengthPreference.isSupported) {
             mVibratorStrength!!.isEnabled = true
         } else {
@@ -197,8 +205,12 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
     // Backlight dimmer initialization
     private fun setBacklightDimmer() {
         val backlightCategory = findPreference<PreferenceCategory>(Constants.KEY_CATEGORY_BACKLIGHT)
-        mBacklightSwitch = findPreference(Constants.KEY_BACKLIGHT)
+        if (!isFeatureSupported(requireContext(), R.string.pathBacklightDimmer)) {
+            backlightCategory?.parent?.removePreference(backlightCategory)
+            return
+        }
 
+        mBacklightSwitch = findPreference(Constants.KEY_BACKLIGHT)
         if (mBacklightSwitch != null && DCModeSwitch.isSupported) {
             mBacklightSwitch!!.isEnabled = true
             mBacklightSwitch!!.isChecked = DCModeSwitch.isCurrentlyEnabled(requireContext())
