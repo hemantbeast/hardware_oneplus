@@ -1,13 +1,13 @@
 package com.aicp.oneplus.OneplusParts.preferences
 
 import android.content.Context
+import android.provider.Settings
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceChangeListener
 
 import com.aicp.oneplus.OneplusParts.Constants
 import com.aicp.oneplus.OneplusParts.R;
-import com.aicp.oneplus.OneplusParts.utils.SPUtils
-import com.aicp.oneplus.OneplusParts.utils.Utils
+import com.aicp.oneplus.OneplusParts.Utils
 
 
 class HWKSwitch(context: Context) : OnPreferenceChangeListener {
@@ -21,7 +21,7 @@ class HWKSwitch(context: Context) : OnPreferenceChangeListener {
     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
         val enabled = newValue as Boolean
         Utils.writeValue(getFile(mContext), if (enabled) "1" else "0")
-        SPUtils.putStringValue(mContext, SETTINGS_KEY, if (enabled) "1" else "0")
+        Settings.System.putString(mContext.contentResolver, SETTINGS_KEY, if (enabled) "1" else "0")
         return true
     }
 
@@ -49,7 +49,7 @@ class HWKSwitch(context: Context) : OnPreferenceChangeListener {
             if (!isSupported) {
                 return
             }
-            val storedValue = SPUtils.getStringValue(context, SETTINGS_KEY, "0")
+            val storedValue = Settings.System.getString(context.contentResolver, SETTINGS_KEY)
             Utils.writeValue(mFileName, storedValue)
         }
     }

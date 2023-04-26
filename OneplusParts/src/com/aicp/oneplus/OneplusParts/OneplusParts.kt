@@ -9,6 +9,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.MenuItem
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -22,8 +23,7 @@ import com.aicp.oneplus.OneplusParts.backlight.DCModeSwitch
 import com.aicp.oneplus.OneplusParts.R
 import com.aicp.oneplus.OneplusParts.preferences.*
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
-import com.aicp.oneplus.OneplusParts.utils.SPUtils
-import com.aicp.oneplus.OneplusParts.utils.Utils
+import com.aicp.oneplus.OneplusParts.Utils
 
 class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
     // Audio gains
@@ -126,9 +126,11 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
             return
         }
 
+        val fpsValue = Settings.System.getInt(context.contentResolver,
+            Constants.KEY_SETTINGS_PREFIX + Constants.KEY_FPS_INFO, 0)
+
         mFpsInfo = findPreference(Constants.KEY_FPS_INFO)
-        mFpsInfo?.isChecked = SPUtils.getBooleanValue(context,
-            Constants.KEY_SETTINGS_PREFIX + Constants.KEY_FPS_INFO, false)
+        mFpsInfo?.isChecked = fpsValue == 1
         mFpsInfo?.onPreferenceChangeListener = this
 
         mFpsInfoPosition = findPreference(Constants.KEY_FPS_INFO_POSITION)
@@ -153,10 +155,13 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         val isFileWritable = Utils.fileWritable(getString(R.string.pathUsbFastCharge))
 
         if (isFileWritable) {
-            mUSB2FastChargeModeSwitch?.isEnabled = true
-            mUSB2FastChargeModeSwitch?.isChecked = SPUtils.getBooleanValue(context,
+            val enabled = Utils.getFileValueAsBoolean(getString(R.string.pathUsbFastCharge), false)
+            val usbValue = Settings.System.getInt(context.contentResolver,
                 Constants.KEY_SETTINGS_PREFIX + Constants.KEY_USB2_SWITCH,
-                Utils.getFileValueAsBoolean(getString(R.string.pathUsbFastCharge), false))
+                if (enabled) 1 else 0)
+
+            mUSB2FastChargeModeSwitch?.isEnabled = true
+            mUSB2FastChargeModeSwitch?.isChecked = usbValue == 1
             mUSB2FastChargeModeSwitch?.onPreferenceChangeListener = this
         } else {
             mUSB2FastChargeModeSwitch?.isEnabled = false
@@ -246,8 +251,8 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
         } else if (preference == mUSB2FastChargeModeSwitch) {
             val enabled = newValue as Boolean
             Utils.writeValue(getString(R.string.pathUsbFastCharge), if (enabled) "1" else "0")
-            SPUtils.putBooleanValue(requireContext(),
-                Constants.KEY_SETTINGS_PREFIX + Constants.KEY_USB2_SWITCH, enabled)
+            Settings.System.putInt(requireContext().contentResolver,
+                Constants.KEY_SETTINGS_PREFIX + Constants.KEY_USB2_SWITCH, if (enabled) 1 else 0)
             return true
         }
         return false
@@ -295,11 +300,11 @@ class OneplusParts : PreferenceFragmentCompat(), Preference.OnPreferenceChangeLi
 
         fun restoreFastChargeSetting(context: Context) {
             if (Utils.fileWritable(context.getString(R.string.pathUsbFastCharge))) {
-                val value = SPUtils.getBooleanValue(context,
+                val enabled = Utils.getFileValueAsBoolean(context.getString(R.string.pathUsbFastCharge), false)
+                val value = Settings.System.getInt(context.contentResolver,
                     Constants.KEY_SETTINGS_PREFIX + Constants.KEY_USB2_SWITCH,
-                    Utils.getFileValueAsBoolean(context.getString(R.string.pathUsbFastCharge), false)
-                )
-                Utils.writeValue(context.getString(R.string.pathUsbFastCharge), if (value) "1" else "0")
+                    if (enabled) 1 else 0)
+                Utils.writeValue(context.getString(R.string.pathUsbFastCharge), value.toString())
             }
         }
     }

@@ -1,12 +1,12 @@
 package com.aicp.oneplus.OneplusParts.backlight
 
 import android.graphics.drawable.Icon
+import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 
 import com.aicp.oneplus.OneplusParts.R
-import com.aicp.oneplus.OneplusParts.utils.SPUtils
-import com.aicp.oneplus.OneplusParts.utils.Utils
+import com.aicp.oneplus.OneplusParts.Utils
 
 
 class DCModeTileService : TileService() {
@@ -22,7 +22,7 @@ class DCModeTileService : TileService() {
         super.onClick()
         enabled = DCModeSwitch.isCurrentlyEnabled(this)
         Utils.writeValue(DCModeSwitch.getFile(this), if (enabled) "0" else "1")
-        SPUtils.putStringValue(this, DCModeSwitch.SETTINGS_KEY, if (enabled) "1" else "0")
+        Settings.System.putString(contentResolver, DCModeSwitch.SETTINGS_KEY, if (enabled) "0" else "1")
         setTile()
     }
 

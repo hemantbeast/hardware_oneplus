@@ -16,7 +16,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 */
-package com.aicp.oneplus.OneplusParts.utils
+package com.aicp.oneplus.OneplusParts
 
 import android.util.Log
 import java.io.*

@@ -8,6 +8,7 @@ package com.aicp.oneplus.OneplusParts
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import android.util.Log
 
 import com.aicp.oneplus.OneplusParts.audio.*
@@ -15,7 +16,6 @@ import com.aicp.oneplus.OneplusParts.backlight.DCModeSwitch
 import com.aicp.oneplus.OneplusParts.preferences.HWKSwitch
 import com.aicp.oneplus.OneplusParts.preferences.VibratorStrengthPreference
 import com.aicp.oneplus.OneplusParts.services.FPSInfoService
-import com.aicp.oneplus.OneplusParts.utils.SPUtils
 
 class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -41,10 +41,10 @@ class BootCompletedReceiver : BroadcastReceiver() {
         VibratorStrengthPreference.restore(context)
 
         // FPS
-        val fpsEnabled = SPUtils.getBooleanValue(context,
-            Constants.KEY_SETTINGS_PREFIX + Constants.KEY_FPS_INFO, false)
+        val fpsEnabled = Settings.System.getInt(context.contentResolver,
+            Constants.KEY_SETTINGS_PREFIX + Constants.KEY_FPS_INFO, 0)
 
-        if (fpsEnabled) {
+        if (fpsEnabled == 1) {
             context.startService(Intent(context, FPSInfoService::class.java))
         }
     }

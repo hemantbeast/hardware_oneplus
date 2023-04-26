@@ -19,13 +19,13 @@
 package com.aicp.oneplus.OneplusParts.audio
 
 import android.content.Context
+import android.provider.Settings
 import android.util.AttributeSet
 
 import com.aicp.oneplus.OneplusParts.Constants
 import com.aicp.oneplus.OneplusParts.R
 import com.aicp.oneplus.OneplusParts.preferences.CustomSeekBarPreference
-import com.aicp.oneplus.OneplusParts.utils.SPUtils
-import com.aicp.oneplus.OneplusParts.utils.Utils
+import com.aicp.oneplus.OneplusParts.Utils
 
 class HeadphoneGainPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
 
@@ -61,7 +61,7 @@ class HeadphoneGainPreference(context: Context, attrs: AttributeSet?) : CustomSe
 
     private fun setValue(newValue: String) {
         Utils.writeValueDual(mFileName, newValue)
-        SPUtils.putStringValue(context, SETTINGS_KEY, newValue)
+        Settings.System.putString(context.contentResolver, SETTINGS_KEY, newValue)
     }
 
     companion object {
@@ -94,7 +94,7 @@ class HeadphoneGainPreference(context: Context, attrs: AttributeSet?) : CustomSe
             if (!isSupported) {
                 return
             }
-            val storedValue = SPUtils.getStringValue(context, SETTINGS_KEY, DEFAULT_VALUE)
+            val storedValue = Settings.System.getString(context.contentResolver, SETTINGS_KEY)
             Utils.writeValueDual(mFileName, storedValue)
         }
     }

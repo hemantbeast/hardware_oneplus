@@ -4,12 +4,12 @@ import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.provider.Settings
 import android.util.AttributeSet
 
 import com.aicp.oneplus.OneplusParts.Constants
 import com.aicp.oneplus.OneplusParts.R
-import com.aicp.oneplus.OneplusParts.utils.SPUtils
-import com.aicp.oneplus.OneplusParts.utils.Utils
+import com.aicp.oneplus.OneplusParts.Utils
 
 
 class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : CustomSeekBarPreference(context, attrs) {
@@ -43,7 +43,7 @@ class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : Custo
 
     fun setValue(newValue: String) {
         Utils.writeValue(mFileName, newValue)
-        SPUtils.putStringValue(context, SETTINGS_KEY, newValue)
+        Settings.System.putString(context.contentResolver, SETTINGS_KEY, newValue)
         mVibrator?.vibrate(VibrationEffect.createWaveform(testVibrationPattern, -1))
     }
 
@@ -77,7 +77,7 @@ class VibratorStrengthPreference(context: Context, attrs: AttributeSet?) : Custo
             if (!isSupported) {
                 return
             }
-            val storedValue = SPUtils.getStringValue(context, SETTINGS_KEY, DEFAULT_VALUE)
+            val storedValue = Settings.System.getString(context.contentResolver, SETTINGS_KEY)
             Utils.writeValue(mFileName, storedValue)
         }
     }
